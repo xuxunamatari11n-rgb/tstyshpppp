@@ -1,8 +1,11 @@
 import tailwindcss from '@tailwindcss/vite'
 
-const storefrontPreviewPaths = {
+const storefrontPublicPaths = {
   catalogue: { fr: '/catalogue', es: '/catalogo' },
   search: { fr: '/recherche', es: '/buscar' },
+}
+
+const storefrontPreviewPaths = {
   favorites: { fr: '/favoris', es: '/favoritos' },
   cart: { fr: '/panier', es: '/carrito' },
   account: { fr: '/compte', es: '/cuenta' },
@@ -14,7 +17,7 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
   pages: true,
-  css: ['~/assets/css/main.css', '~/assets/css/storefront.css'],
+  css: ['~/assets/css/main.css', '~/assets/css/storefront.css', '~/assets/css/home.css'],
   app: {
     head: {
       viewport: 'width=device-width, initial-scale=1, viewport-fit=cover',
@@ -27,16 +30,16 @@ export default defineNuxtConfig({
     (_options, nuxt) => {
       nuxt.hook('pages:extend', (pages) => {
         if (!nuxt.options.dev) {
-          const previews = new Set(['index', 'design-system'])
-          for (let index = pages.length - 1; index >= 0; index--) {
-            const name = pages[index]?.name
-            if (name && previews.has(name)) pages.splice(index, 1)
-          }
-          return
+          const designSystemIndex = pages.findIndex(page => page.name === 'design-system')
+          if (designSystemIndex !== -1) pages.splice(designSystemIndex, 1)
         }
 
         const mockPages = `${nuxt.options.srcDir.replace(/[/\\]+$/, '')}/mocks/pages`
-        for (const [name, paths] of Object.entries(storefrontPreviewPaths)) {
+        const storefrontPaths = nuxt.options.dev
+          ? { ...storefrontPublicPaths, ...storefrontPreviewPaths }
+          : storefrontPublicPaths
+
+        for (const [name, paths] of Object.entries(storefrontPaths)) {
           pages.push({
             name,
             path: paths.fr,
