@@ -1,4 +1,64 @@
-<script setup lang="ts"> import headphonesImage from '~/assets/design-system/wireless-headphones.webp' import accessoriesImage from '~/assets/design-system/tech-accessories.webp' import type { BadgeVariant, ButtonVariant } from '~/types/ui' definePageMeta({ layout: false }) const { t } = useI18n() useSeoMeta({ title: () => t('guide.title'), robots: 'noindex, nofollow' }) const sections = ['specimens', 'palette', 'typography', 'actions', 'forms', 'feedback', 'layout'] as const const swatches = [ { token: 'brand', hex: '#C8F135' }, { token: 'brand-hover', hex: '#B5DC24' }, { token: 'brand-foreground', hex: '#151515' }, { token: 'ink', hex: '#151515' }, { token: 'muted', hex: '#717171' }, { token: 'canvas', hex: '#FAFAFA' }, { token: 'surface', hex: '#FFFFFF' }, { token: 'line', hex: '#E5E5E5' }, { token: 'subtle', hex: '#F2F2F2' }, { token: 'success', hex: '#16803C' }, { token: 'danger', hex: '#DC2626' }, { token: 'whatsapp', hex: '#25D366' }, ] as const const buttons = [ { variant: 'primary', icon: 'ion:arrow-forward-outline' }, { variant: 'secondary' }, { variant: 'outline' }, { variant: 'ghost' }, { variant: 'whatsapp', icon: 'ion:logo-whatsapp' }, ] satisfies { variant: ButtonVariant; icon?: string }[] const badges: BadgeVariant[] = ['neutral', 'brand', 'discount', 'featured', 'success', 'danger'] const icons = [ { name: 'ion:bag-outline', key: 'bag' }, { name: 'ion:search-outline', key: 'search' }, { name: 'ion:heart-outline', key: 'heart' }, { name: 'ion:person-outline', key: 'person' }, { name: 'ion:arrow-forward-outline', key: 'arrow' }, ] as const const scale = [8, 16, 24, 32, 48, 64, 96] const price = 15000 const previousPrice = 20000 const discount = Math.round(100 * (previousPrice - price) / previousPrice) const name = ref('') const email = ref('testy') const note = ref('') const contact = ref('') const updates = ref(false) const selection = ref('') const specimenAction = ref('') const favorite = ref(false) const contactOptions = computed(() => [ { value: 'email', label: t('guide.fields.email') }, { value: 'whatsapp', label: 'WhatsApp' }, ]) const motionTarget = useTemplateRef('motion-target') const { play } = useEntranceMotion(motionTarget) </script> <template> <a href="#guide-content" class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-10 focus:rounded-standard focus:bg-surface focus:p-3" >{{ t('guide.skip') }}</a> <header class="border-b border-line"> <UiContainer class="flex min-h-16 flex-wrap items-center justify-between gap-x-5 py-2"> <span class="font-display text-base font-bold sm:text-lg">Testy Shop</span> <SharedLanguageSwitcher /> </UiContainer> </header>
+<script setup lang="ts">
+import headphonesImage from '~/assets/design-system/wireless-headphones.webp'
+import accessoriesImage from '~/assets/design-system/tech-accessories.webp'
+import type { BadgeVariant, ButtonVariant } from '~/types/ui'
+
+definePageMeta({ layout: false })
+
+const { t } = useI18n()
+useSeoMeta({ title: () => t('guide.title'), robots: 'noindex, nofollow' })
+
+const sections = ['specimens', 'palette', 'typography', 'actions', 'forms', 'feedback', 'layout'] as const
+const swatches = [
+  { token: 'brand', hex: '#C8F135' },
+  { token: 'brand-hover', hex: '#B5DC24' },
+  { token: 'brand-foreground', hex: '#151515' },
+  { token: 'ink', hex: '#151515' },
+  { token: 'muted', hex: '#717171' },
+  { token: 'canvas', hex: '#FAFAFA' },
+  { token: 'surface', hex: '#FFFFFF' },
+  { token: 'line', hex: '#E5E5E5' },
+  { token: 'subtle', hex: '#F2F2F2' },
+  { token: 'success', hex: '#16803C' },
+  { token: 'danger', hex: '#DC2626' },
+  { token: 'whatsapp', hex: '#25D366' },
+] as const
+
+const buttons = [
+  { variant: 'primary', icon: 'ion:arrow-forward-outline' },
+  { variant: 'secondary' },
+  { variant: 'outline' },
+  { variant: 'ghost' },
+  { variant: 'whatsapp', icon: 'ion:logo-whatsapp' },
+] satisfies { variant: ButtonVariant; icon?: string }[]
+const badges: BadgeVariant[] = ['neutral', 'brand', 'discount', 'featured', 'success', 'danger']
+const icons = [
+  { name: 'ion:bag-outline', key: 'bag' },
+  { name: 'ion:search-outline', key: 'search' },
+  { name: 'ion:heart-outline', key: 'heart' },
+  { name: 'ion:person-outline', key: 'person' },
+  { name: 'ion:arrow-forward-outline', key: 'arrow' },
+] as const
+const scale = [8, 16, 24, 32, 48, 64, 96]
+const price = 15000
+const previousPrice = 20000
+const discount = Math.round(100 * (previousPrice - price) / previousPrice)
+
+const name = ref('')
+const email = ref('testy')
+const note = ref('')
+const contact = ref('')
+const updates = ref(false)
+const selection = ref('')
+const specimenAction = ref('')
+const favorite = ref(false)
+const contactOptions = computed(() => [
+  { value: 'email', label: t('guide.fields.email') },
+  { value: 'whatsapp', label: 'WhatsApp' },
+])
+const motionTarget = useTemplateRef('motion-target')
+const { play } = useEntranceMotion(motionTarget)
+</script> <template> <a href="#guide-content" class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-10 focus:rounded-standard focus:bg-surface focus:p-3" >{{ t('guide.skip') }}</a> <header class="border-b border-line"> <UiContainer class="flex min-h-16 flex-wrap items-center justify-between gap-x-5 py-2"> <span class="font-display text-base font-bold sm:text-lg">Testy Shop</span> <SharedLanguageSwitcher /> </UiContainer> </header>
   <UiContainer id="guide-content" as="main" tabindex="-1">
     <div class="guide-hero mt-4 grid gap-6 rounded-promo bg-ink p-5 text-surface sm:mt-6 sm:p-8 lg:grid-cols-[minmax(0,1fr)_minmax(16rem,0.5fr)] lg:items-end lg:gap-10 lg:p-10">
       <div class="min-w-0">

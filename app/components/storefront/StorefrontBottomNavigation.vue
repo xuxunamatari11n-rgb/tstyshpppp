@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useStorefrontDestination } from '~/composables/useStorefrontDestination'
+withDefaults(defineProps<{ cartCount?: number }>(), { cartCount: 0 })
 const { t } = useI18n()
 const destinationPath = useStorefrontDestination()
 const route = useRoute()
@@ -26,12 +27,17 @@ function isActive(name: typeof destinations[number]['name']) {
           :to="destinationPath(destination.name)"
           :aria-disabled="!destinationPath(destination.name) || undefined"
           :aria-current="isActive(destination.name) ? (current === destination.name ? 'page' : 'location') : undefined"
+          :aria-label="destination.name === 'cart' && cartCount > 0 ? t('storefront.cartCount', cartCount) : undefined"
           class="storefront-bottom-link"
         >
           <span class="storefront-bottom-icon">
-            <Icon :name="isActive(destination.name) ? destination.active : destination.normal" size="22" aria-hidden="true" />
+            <Icon class="storefront-bottom-icon-outline" :name="destination.normal" size="24" aria-hidden="true" />
+            <Icon class="storefront-bottom-icon-filled" :name="destination.active" size="24" aria-hidden="true" />
+            <span v-if="destination.name === 'cart' && cartCount > 0" class="storefront-bottom-count" aria-hidden="true">
+              <UiNumericText :value="cartCount > 99 ? '99+' : String(cartCount)" />
+            </span>
           </span>
-          <span>{{ t(`storefront.nav.${destination.label}`) }}</span>
+          <span class="storefront-bottom-label">{{ t(`storefront.nav.${destination.label}`) }}</span>
         </NuxtLink>
       </li>
     </ul>

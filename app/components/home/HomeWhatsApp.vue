@@ -1,19 +1,18 @@
 <script setup lang="ts">
-import { useHomeCatalogueLink } from '~/composables/useHomeCatalogueLink'
 import { useWhatsAppContact } from '~/composables/useWhatsAppContact'
 const { t } = useI18n()
-const catalogue = useHomeCatalogueLink()
 const whatsappUrl = useWhatsAppContact()
-const steps = [
-  { id: 'discover', icon: 'ion:compass-outline' },
-  { id: 'select', icon: 'ion:bag-handle-outline' },
-  { id: 'send', icon: 'ion:logo-whatsapp' },
-] as const
+const steps = ['discover', 'select', 'send'] as const
 </script>
 
 <template>
   <section class="home-section home-whatsapp" aria-labelledby="home-whatsapp-title">
     <div>
+      <div class="home-whatsapp-graphic" aria-hidden="true">
+        <span><Icon name="ion:bag-handle-outline" size="28" /></span>
+        <Icon name="ion:arrow-forward-outline" size="22" />
+        <span class="home-whatsapp-bubble"><Icon name="ion:logo-whatsapp" size="33" /></span>
+      </div>
       <p class="home-kicker text-brand">{{ t('home.whatsapp.label') }}</p>
       <h2 id="home-whatsapp-title">{{ t('home.whatsapp.title') }}</h2>
       <p class="home-whatsapp-intro">{{ t('home.whatsapp.description') }}</p>
@@ -22,18 +21,18 @@ const steps = [
         {{ t('storefront.footer.contactWhatsApp') }}
       </NuxtLink>
       <template v-else>
-        <NuxtLink class="ui-button" data-variant="primary" :to="catalogue()">
-          {{ t('home.hero.cta') }} <Icon name="ion:arrow-forward-outline" size="20" aria-hidden="true" />
+        <NuxtLink class="ui-button" data-variant="primary" to="#storefront-assistance">
+          {{ t('storefront.footer.help') }} <Icon name="ion:arrow-forward-outline" size="20" aria-hidden="true" />
         </NuxtLink>
         <p class="mt-3 text-sm text-line">{{ t('storefront.footer.whatsappPending') }}</p>
       </template>
     </div>
     <ol class="home-whatsapp-steps">
-      <li v-for="(step, index) in steps" :key="step.id">
-        <span class="home-step-icon"><Icon :name="step.icon" size="22" aria-hidden="true" /></span>
+      <li v-for="(step, index) in steps" :key="step">
+        <span class="home-step-number" aria-hidden="true">{{ index + 1 }}</span>
         <div>
-          <h3>{{ index + 1 }}. {{ t(`home.whatsapp.steps.${step.id}.title`) }}</h3>
-          <p>{{ t(`home.whatsapp.steps.${step.id}.description`) }}</p>
+          <h3>{{ t(`home.whatsapp.steps.${step}.title`) }}</h3>
+          <p>{{ t(`home.whatsapp.steps.${step}.description`) }}</p>
         </div>
       </li>
     </ol>

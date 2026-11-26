@@ -80,6 +80,19 @@
     }
   },
   "storefront": {
+    "drawer": {
+      "open": "Abrir el menú",
+      "close": "Cerrar el menú",
+      "title": "Menú de la tienda",
+      "welcome": "Te damos la bienvenida a Testy Shop",
+      "signIn": "Iniciar sesión",
+      "createAccount": "Crear una cuenta",
+      "discovery": "Descubre la tienda",
+      "categories": "Secciones",
+      "subcategories": "Subcategorías: {category}",
+      "orders": "Ayuda con los pedidos",
+      "whatsappFallback": "Ayuda y asistencia. Contacto por WhatsApp no disponible."
+    },
     "wordmarkLabel": "testyshop. – Inicio",
     "announcement": "Descubre las novedades y ofertas de Testy Shop.",
     "cartCount": "Carrito, {count} artículo | Carrito, {count} artículos",
@@ -260,7 +273,7 @@
     },
     "whatsapp": {
       "label": "Pedidos por WhatsApp",
-      "title": "Una conversación y listo.",
+      "title": "De tu selección a tu pedido",
       "description": "Encuentra lo que te gusta y envía tu solicitud de pedido por WhatsApp cuando el contacto esté disponible.",
       "steps": {
         "discover": {

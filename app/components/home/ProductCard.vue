@@ -12,7 +12,7 @@ const discount = computed(() => {
 </script>
 
 <template>
-  <article class="home-product">
+  <article class="home-product" :class="{ 'home-product-unavailable': !product.available }">
     <div class="home-product-photo" :class="{ 'home-product-cutout': photo.cutout }">
       <img :src="photo.src" :width="photo.width" :height="photo.height" :alt="t(photo.altKey)" loading="lazy" decoding="async">
       <UiBadge v-if="discount" variant="discount" class="home-product-badge">
@@ -40,15 +40,15 @@ const discount = computed(() => {
       </p>
       <UiIconButton
         :icon="added ? 'ion:checkmark-outline' : 'ion:cart-outline'"
-        :label="t('home.actions.add', { product: t(product.nameKey) })"
-        :title="t('home.actions.add', { product: t(product.nameKey) })"
+        :label="product.available ? t('home.actions.add', { product: t(product.nameKey) }) : t('guide.badges.danger')"
+        :title="product.available ? t('home.actions.add', { product: t(product.nameKey) }) : t('guide.badges.danger')"
         :disabled="!product.available"
         class="home-product-add"
         variant="primary"
         @click="emit('add', product)"
       />
     </div>
-    <p v-if="!product.available" class="mt-1 text-sm text-muted-ink">{{ t('guide.badges.danger') }}</p>
+    <p v-if="!product.available" class="home-product-stock">{{ t('guide.badges.danger') }}</p>
   </article>
 </template>
 

@@ -21,7 +21,9 @@ export function useCommercialReveal(root: Readonly<Ref<HTMLElement | null>>, imm
       const text = element.querySelectorAll('[data-commercial-reveal]')
       const photos = element.querySelectorAll('[data-commercial-photo]')
       if (text.length) $gsap.from(text, { y: 10, opacity: 0.86, duration: 0.38, stagger: 0.045, ease: 'power3.out', clearProps: 'transform,opacity' })
-      if (photos.length) $gsap.from(photos, { y: 14, opacity: 0.9, duration: 0.48, stagger: 0.055, ease: 'power3.out', clearProps: 'transform,opacity' })
+      if (photos.length) $gsap.from(photos, { y: 14, opacity: 0.9, duration: 0.43, delay: 0.055, stagger: 0.055, ease: 'power3.out', clearProps: 'transform,opacity' })
+      const orbit = element.querySelector('[data-commercial-orbit]')
+      if (orbit) $gsap.from(orbit, { rotate: -12, scale: 0.92, opacity: 0.4, duration: 0.68, ease: 'power3.out', clearProps: 'transform,opacity' })
     }, element)
   }
 

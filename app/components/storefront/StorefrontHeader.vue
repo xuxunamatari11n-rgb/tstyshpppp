@@ -5,6 +5,17 @@ const { t } = useI18n()
 const destination = useStorefrontDestination()
 const { query, recents, submit } = useStorefrontSearch()
 const mobileSearch = useTemplateRef('mobileSearch')
+const mobileDrawer = useTemplateRef('mobileDrawer')
+const mobileHeader = useTemplateRef('mobileHeader')
+const drawerId = useId()
+const compact = useStorefrontMobileHeader(mobileHeader)
+const whatsappUrl = useWhatsAppContact()
+const route = useRoute()
+const assistance = computed(() => ({ path: route.path, query: route.query, hash: '#storefront-assistance' }))
+
+function openDrawer(event: MouseEvent) {
+  if (event.currentTarget instanceof HTMLElement) void mobileDrawer.value?.open(event.currentTarget)
+}
 
 function openSearch(event: MouseEvent) {
   if (event.currentTarget instanceof HTMLElement) void mobileSearch.value?.open(event.currentTarget)
@@ -24,8 +35,8 @@ function openSearch(event: MouseEvent) {
     </UiContainer>
   </div>
 
-  <header class="sticky top-0 z-40 bg-surface">
-    <div class="hidden lg:block">
+  <header class="storefront-header sticky top-0 z-40">
+    <div class="hidden bg-surface lg:block">
       <UiContainer class="relative z-10 grid min-h-[82px] grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-7 xl:gap-12">
         <SharedBrandWordmark />
         <StorefrontDesktopSearch v-model="query" :recents="recents" @submit="submit" />
@@ -47,18 +58,35 @@ function openSearch(event: MouseEvent) {
       <StorefrontCommercialNav />
     </div>
 
-    <div class="border-b border-line lg:hidden">
-      <UiContainer class="pb-2.5">
-        <div class="flex min-h-14 items-center justify-between gap-2">
-          <SharedBrandWordmark />
-          <div class="flex shrink-0 items-center gap-1">
-            <SharedLanguageSwitcher compact />
-            <StorefrontCart :count="cartCount" />
-          </div>
-        </div>
+    <div ref="mobileHeader" class="storefront-mobile-header lg:hidden" :data-compact="compact">
+      <UiContainer class="storefront-mobile-brand-row" :inert="compact">
         <button
           type="button"
-          class="storefront-search-field w-full gap-3 px-3 text-start text-muted-ink"
+          class="storefront-mobile-utility"
+          :aria-label="t('storefront.drawer.open')"
+          aria-haspopup="dialog"
+          :aria-controls="drawerId"
+          @click="openDrawer"
+        >
+          <Icon name="ion:menu-outline" size="26" aria-hidden="true" />
+        </button>
+        <SharedBrandWordmark class="storefront-mobile-wordmark" />
+        <div class="storefront-mobile-brand-actions">
+          <SharedLanguageSwitcher compact />
+          <NuxtLink
+            :to="whatsappUrl || assistance"
+            :external="Boolean(whatsappUrl)"
+            class="storefront-mobile-utility"
+            :aria-label="whatsappUrl ? t('storefront.footer.contactWhatsApp') : t('storefront.drawer.whatsappFallback')"
+          >
+            <Icon name="ion:logo-whatsapp" size="23" aria-hidden="true" />
+          </NuxtLink>
+        </div>
+      </UiContainer>
+      <UiContainer class="storefront-mobile-search-row">
+        <button
+          type="button"
+          class="storefront-search-field storefront-mobile-search-trigger w-full gap-3 px-3 text-start text-muted-ink"
           aria-haspopup="dialog"
           :aria-label="query ? t('storefront.search.openWithQuery', { query }) : undefined"
           @click="openSearch"
@@ -67,8 +95,12 @@ function openSearch(event: MouseEvent) {
           <span class="min-w-0 truncate font-normal">{{ query || t('storefront.search.placeholder') }}</span>
         </button>
       </UiContainer>
-      <StorefrontMobileSearch ref="mobileSearch" v-model="query" :recents="recents" @submit="submit" />
+      <div class="storefront-mobile-shortcut-row" :inert="compact">
+        <StorefrontMobileShortcuts class="storefront-header-shortcuts" />
+      </div>
     </div>
   </header>
+  <StorefrontMobileDrawer :id="drawerId" ref="mobileDrawer" />
+  <StorefrontMobileSearch ref="mobileSearch" v-model="query" :recents="recents" @submit="submit" />
 </template>
 

@@ -23,4 +23,3 @@ useSeoMeta({
     <div role="status" aria-live="polite" class="home-feedback" :class="{ 'sr-only': !message }">{{ message }}</div>
   </UiContainer>
 </template>
-

@@ -12,10 +12,10 @@ const catalogue = useHomeCatalogueLink()
     <ul class="home-universe-grid">
       <li v-for="universe in homeUniverses" :key="universe.id">
         <NuxtLink class="home-universe" :to="catalogue(universe)">
-          <img :src="universe.image.src" :width="universe.image.width" :height="universe.image.height" :alt="t(universe.image.altKey)" loading="lazy" decoding="async">
+          <img class="home-universe-image" :src="universe.image.src" :width="universe.image.width" :height="universe.image.height" alt="" loading="lazy" decoding="async">
           <span class="home-universe-caption">
             {{ t(`home.universes.${universe.id}`) }}
-            <Icon name="ion:arrow-forward-outline" size="22" aria-hidden="true" />
+            <span class="home-universe-arrow"><Icon name="ion:arrow-forward-outline" size="20" aria-hidden="true" /></span>
           </span>
         </NuxtLink>
       </li>

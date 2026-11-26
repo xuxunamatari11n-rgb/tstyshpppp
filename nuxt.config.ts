@@ -3,12 +3,12 @@ import tailwindcss from '@tailwindcss/vite'
 const storefrontPublicPaths = {
   catalogue: { fr: '/catalogue', es: '/catalogo' },
   search: { fr: '/recherche', es: '/buscar' },
-}
-
-const storefrontPreviewPaths = {
   favorites: { fr: '/favoris', es: '/favoritos' },
   cart: { fr: '/panier', es: '/carrito' },
   account: { fr: '/compte', es: '/cuenta' },
+}
+
+const storefrontPreviewPaths = {
   legal: { fr: '/mentions-legales', es: '/aviso-legal' },
   privacy: { fr: '/confidentialite', es: '/privacidad' },
 }

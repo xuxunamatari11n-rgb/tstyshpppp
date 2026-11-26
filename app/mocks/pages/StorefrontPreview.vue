@@ -35,6 +35,10 @@ const title = computed(() => {
     if (selection.value) return t(`storefront.nav.${selection.value}`)
     return t('storefront.nav.explore')
   }
+  if (page.value === 'account') {
+    if (route.query.intent === 'sign-in') return t('storefront.drawer.signIn')
+    if (route.query.intent === 'create-account') return t('storefront.drawer.createAccount')
+  }
   return t(`storefront.nav.${page.value}`)
 })
 

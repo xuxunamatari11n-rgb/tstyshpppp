@@ -11,9 +11,9 @@ pnpm dev
 
 Open `/design-system` for the French guide or `/es/design-system` for Spanish. Both preview routes are development-only.
 
-The storefront homepage is available at `/` and `/es`. The lightweight catalogue and search destinations share localized mock products with the homepage. Favorites, cart, account, and legal preview routes are development-only. Homepage product actions reset when the page is left.
+The storefront homepage is available at `/` and `/es`. The lightweight catalogue and search destinations share localized mock products with the homepage. Favorites, cart and account are public placeholders for navigation. The legal previews remain development-only. Homepage product actions reset when the page is left.
 
-To enable the footer’s WhatsApp contact link, set `NUXT_PUBLIC_WHATSAPP_NUMBER` to the shop’s international number. With no valid number configured, the footer shows the contact as unavailable.
+To enable the storefront’s WhatsApp contact links, set `NUXT_PUBLIC_WHATSAPP_NUMBER` to the shop’s international number. With no valid number configured, mobile shortcuts and the homepage ordering section point to the localized assistance section.
 
 ```sh
 pnpm typecheck
