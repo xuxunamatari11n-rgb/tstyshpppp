@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useHomeCatalogueLink } from '~/composables/useHomeCatalogueLink'
+import { useWhatsAppContact } from '~/composables/useWhatsAppContact'
 const { t } = useI18n()
 const catalogue = useHomeCatalogueLink()
 const whatsappUrl = useWhatsAppContact()

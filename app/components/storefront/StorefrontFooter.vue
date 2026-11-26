@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useWhatsAppContact } from '~/composables/useWhatsAppContact'
+import { useStorefrontDestination } from '~/composables/useStorefrontDestination'
 import { storefrontSelections } from '~/mocks/storefront'
 
 const { t } = useI18n()

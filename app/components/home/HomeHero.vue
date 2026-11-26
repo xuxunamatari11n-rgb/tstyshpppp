@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useCommercialReveal } from '~/composables/useCommercialReveal'
+import { useHomeCatalogueLink } from '~/composables/useHomeCatalogueLink'
 import { heroImages } from '~/mocks/home'
 
 const { t } = useI18n()

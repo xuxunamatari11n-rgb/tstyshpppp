@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useCommercialReveal } from '~/composables/useCommercialReveal'
+import { useHomeCatalogueLink } from '~/composables/useHomeCatalogueLink'
 import type { CommercialProduct, ProductCollection } from '~/types/commerce'
 import { getCollectionProducts } from '~/mocks/home'
 

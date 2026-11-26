@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useProductInteractions } from '~/composables/useProductInteractions'
 import { storefrontCategories, storefrontSelections } from '~/mocks/storefront'
 import { getCollectionProducts, homeCollections, homeProducts } from '~/mocks/home'
 

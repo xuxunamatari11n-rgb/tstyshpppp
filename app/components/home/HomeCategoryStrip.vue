@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useHomeCatalogueLink } from '~/composables/useHomeCatalogueLink'
 import { featuredCategories } from '~/mocks/home'
 
 const { t } = useI18n()

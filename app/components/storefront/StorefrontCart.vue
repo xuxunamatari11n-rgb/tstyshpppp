@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useStorefrontDestination } from '~/composables/useStorefrontDestination'
 withDefaults(defineProps<{ count?: number; showLabel?: boolean }>(), { count: 0 })
 const { t } = useI18n()
 const destination = useStorefrontDestination()

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useStorefrontDestination } from '~/composables/useStorefrontDestination'
 const { t } = useI18n()
 const destinationPath = useStorefrontDestination()
 const route = useRoute()

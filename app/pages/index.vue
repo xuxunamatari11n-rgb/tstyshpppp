@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useProductInteractions } from '~/composables/useProductInteractions'
 import { homeCollections } from '~/mocks/home'
 
 const { t } = useI18n()

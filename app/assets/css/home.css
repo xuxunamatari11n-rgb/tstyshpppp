@@ -83,7 +83,7 @@
 
 .home-hero-layer-headphones { z-index: 1; width: 41%; inset: -26% 11% auto auto; rotate: 12deg; }
 .home-hero-layer-bag { z-index: 2; width: 36%; inset: auto 7% -12% auto; rotate: 13deg; }
-.home-hero-layer-sneaker { z-index: 3; width: 65%; inset: auto auto -25% 3%; rotate: -12deg; }
+.home-hero-layer-sneaker { z-index: 3; width: 65%; inset: auto auto -20% 3%; rotate: -12deg; }
 
 .home-hero-side { display: grid; gap: 0.875rem; }
 .home-hero-tile {
@@ -377,6 +377,11 @@
   .home-universe-grid li:first-child { grid-column: 1 / -1; }
 }
 
+@media (min-width: 22.5rem) and (max-width: 39.999rem) {
+  .home-hero-tile-copy { width: 68%; }
+  .home-hero-tile-image { width: 45%; inset-inline-end: -7%; }
+}
+
 @media (min-width: 40rem) {
   .home-hero-main { grid-template-columns: minmax(0, 1.07fr) minmax(0, 0.93fr); min-height: 19rem; }
   .home-hero-art::before { inset: 12% 10% 12% 4%; }
@@ -392,6 +397,8 @@
 
 @media (min-width: 64rem) {
   .home-hero { grid-template-columns: minmax(0, 13fr) minmax(0, 7fr); min-height: clamp(27.5rem, 32vw, 30rem); }
+  .home-hero-copy { gap: 0.625rem; padding-block: clamp(1.5rem, 2.1vw, 2rem); }
+  .home-hero-copy h1 { max-width: 12.2ch; font-size: clamp(2.35rem, 4vw, 4.25rem); }
   .home-hero-side { grid-template-columns: 1fr; grid-template-rows: 1fr 1fr; }
   .home-hero-tile-image { inset-inline-end: -2%; }
   .home-hero-layer-headphones { inset-block-start: 8%; }
