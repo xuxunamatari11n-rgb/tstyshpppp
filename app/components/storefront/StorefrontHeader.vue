@@ -58,49 +58,53 @@ function openSearch(event: MouseEvent) {
       <StorefrontCommercialNav />
     </div>
 
-    <div ref="mobileHeader" class="storefront-mobile-header lg:hidden" :data-compact="compact">
-      <UiContainer class="storefront-mobile-brand-row" :inert="compact">
-        <button
-          type="button"
-          class="storefront-mobile-utility"
-          :aria-label="t('storefront.drawer.open')"
-          aria-haspopup="dialog"
-          :aria-controls="drawerId"
-          @click="openDrawer"
-        >
-          <Icon name="ion:menu-outline" size="26" aria-hidden="true" />
-        </button>
-        <SharedBrandWordmark class="storefront-mobile-wordmark" />
-        <div class="storefront-mobile-brand-actions">
-          <SharedLanguageSwitcher compact />
-          <NuxtLink
-            :to="whatsappUrl || assistance"
-            :external="Boolean(whatsappUrl)"
+    <slot name="mobile">
+      <div ref="mobileHeader" class="storefront-mobile-header lg:hidden" :data-compact="compact">
+        <UiContainer class="storefront-mobile-brand-row" :inert="compact">
+          <button
+            type="button"
             class="storefront-mobile-utility"
-            :aria-label="whatsappUrl ? t('storefront.footer.contactWhatsApp') : t('storefront.drawer.whatsappFallback')"
+            :aria-label="t('storefront.drawer.open')"
+            aria-haspopup="dialog"
+            :aria-controls="drawerId"
+            @click="openDrawer"
           >
-            <Icon name="ion:logo-whatsapp" size="23" aria-hidden="true" />
-          </NuxtLink>
+            <Icon name="ion:menu-outline" size="26" aria-hidden="true" />
+          </button>
+          <SharedBrandWordmark class="storefront-mobile-wordmark" />
+          <div class="storefront-mobile-brand-actions">
+            <SharedLanguageSwitcher compact />
+            <NuxtLink
+              :to="whatsappUrl || assistance"
+              :external="Boolean(whatsappUrl)"
+              class="storefront-mobile-utility"
+              :aria-label="whatsappUrl ? t('storefront.footer.contactWhatsApp') : t('storefront.drawer.whatsappFallback')"
+            >
+              <Icon name="ion:logo-whatsapp" size="23" aria-hidden="true" />
+            </NuxtLink>
+          </div>
+        </UiContainer>
+        <UiContainer class="storefront-mobile-search-row">
+          <button
+            type="button"
+            class="storefront-search-field storefront-mobile-search-trigger w-full gap-3 px-3 text-start text-muted-ink"
+            aria-haspopup="dialog"
+            :aria-label="query ? t('storefront.search.openWithQuery', { query }) : undefined"
+            @click="openSearch"
+          >
+            <Icon name="ion:search-outline" size="22" aria-hidden="true" />
+            <span class="min-w-0 truncate font-normal">{{ query || t('storefront.search.placeholder') }}</span>
+          </button>
+        </UiContainer>
+        <div class="storefront-mobile-shortcut-row" :inert="compact">
+          <StorefrontMobileShortcuts class="storefront-header-shortcuts" />
         </div>
-      </UiContainer>
-      <UiContainer class="storefront-mobile-search-row">
-        <button
-          type="button"
-          class="storefront-search-field storefront-mobile-search-trigger w-full gap-3 px-3 text-start text-muted-ink"
-          aria-haspopup="dialog"
-          :aria-label="query ? t('storefront.search.openWithQuery', { query }) : undefined"
-          @click="openSearch"
-        >
-          <Icon name="ion:search-outline" size="22" aria-hidden="true" />
-          <span class="min-w-0 truncate font-normal">{{ query || t('storefront.search.placeholder') }}</span>
-        </button>
-      </UiContainer>
-      <div class="storefront-mobile-shortcut-row" :inert="compact">
-        <StorefrontMobileShortcuts class="storefront-header-shortcuts" />
       </div>
-    </div>
+    </slot>
   </header>
-  <StorefrontMobileDrawer :id="drawerId" ref="mobileDrawer" />
-  <StorefrontMobileSearch ref="mobileSearch" v-model="query" :recents="recents" @submit="submit" />
+  <template v-if="!$slots.mobile">
+    <StorefrontMobileDrawer :id="drawerId" ref="mobileDrawer" />
+    <StorefrontMobileSearch ref="mobileSearch" v-model="query" :recents="recents" @submit="submit" />
+  </template>
 </template>
 

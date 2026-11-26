@@ -1,35 +1,43 @@
 <script setup lang="ts">
 import type { CommercialProduct } from '~/types/commerce'
+import { productAvailability, productImages, productSavings } from '~/utils/product'
 
-const props = defineProps<{ product: CommercialProduct; favorite?: boolean; added?: boolean }>()
-const emit = defineEmits<{ favorite: [product: CommercialProduct]; add: [product: CommercialProduct] }>()
+const props = defineProps<{ product: CommercialProduct }>()
 const { t } = useI18n()
-const photo = computed(() => props.product.images[0])
+const localePath = useLocalePath()
+const { isFavorite, toggleFavorite } = useProductFavorites()
+const photo = computed(() => productImages(props.product)[0])
+const available = computed(() => productAvailability(props.product))
 const discount = computed(() => {
-  const oldPrice = props.product.previousPrice
-  return oldPrice && oldPrice > props.product.price ? Math.round((oldPrice - props.product.price) / oldPrice * 100) : 0
+  const savings = productSavings(props.product)
+  return savings && props.product.previousPrice ? Math.round(savings / props.product.previousPrice * 100) : 0
 })
+const productLink = computed(() => localePath({ name: 'product', params: { slug: props.product.slug } }))
+const cartLabel = computed(() => t(available.value ? 'catalogue.purchasePending' : 'product.outOfStock'))
 </script>
 
 <template>
-  <article class="home-product" :class="{ 'home-product-unavailable': !product.available }">
-    <div class="home-product-photo" :class="{ 'home-product-cutout': photo.cutout }">
-      <img :src="photo.src" :width="photo.width" :height="photo.height" :alt="t(photo.altKey)" loading="lazy" decoding="async">
+  <article class="home-product" :class="{ 'home-product-unavailable': !available }" :data-product-slug="product.slug">
+    <div class="home-product-photo" :class="{ 'home-product-cutout': photo?.cutout }">
+      <NuxtLink :to="productLink" class="home-product-photo-link" :aria-label="t(product.nameKey)">
+        <ProductPhoto :image="photo" />
+      </NuxtLink>
       <UiBadge v-if="discount" variant="discount" class="home-product-badge">
         <UiNumericText :value="t('home.discount', { percent: discount })" />
       </UiBadge>
       <UiIconButton
-        :icon="favorite ? 'ion:heart' : 'ion:heart-outline'"
+        :icon="isFavorite(product.id) ? 'ion:heart' : 'ion:heart-outline'"
         :label="t('home.actions.favorite', { product: t(product.nameKey) })"
-        :aria-pressed="Boolean(favorite)"
+        :aria-pressed="isFavorite(product.id)"
         :title="t('home.actions.favorite', { product: t(product.nameKey) })"
         variant="ghost"
         class="home-product-favorite"
-        @click="emit('favorite', product)"
+        @click="toggleFavorite(product.id)"
       />
     </div>
     <p class="home-product-category">{{ t(`storefront.categories.${product.categoryId}`) }}</p>
-    <h3 class="home-product-name">{{ t(product.nameKey) }}</h3>
+    <h3 class="home-product-name"><NuxtLink :to="productLink">{{ t(product.nameKey) }}</NuxtLink></h3>
+    <p v-if="!available" class="home-product-stock">{{ t('product.outOfStock') }}</p>
     <div class="home-product-line">
       <p class="home-product-prices">
         <UiNumericText class="home-product-price" :value="formatCurrency(product.price)" />
@@ -38,17 +46,7 @@ const discount = computed(() => {
           <UiNumericText :value="formatCurrency(product.previousPrice)" />
         </del>
       </p>
-      <UiIconButton
-        :icon="added ? 'ion:checkmark-outline' : 'ion:cart-outline'"
-        :label="product.available ? t('home.actions.add', { product: t(product.nameKey) }) : t('guide.badges.danger')"
-        :title="product.available ? t('home.actions.add', { product: t(product.nameKey) }) : t('guide.badges.danger')"
-        :disabled="!product.available"
-        class="home-product-add"
-        variant="primary"
-        @click="emit('add', product)"
-      />
+      <UiIconButton icon="ion:cart-outline" :label="cartLabel" :title="cartLabel" disabled class="home-product-add commercial-cart" variant="primary" />
     </div>
-    <p v-if="!product.available" class="home-product-stock">{{ t('guide.badges.danger') }}</p>
   </article>
 </template>
-

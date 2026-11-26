@@ -41,37 +41,36 @@ const trust = [
             <p class="mt-2 max-w-xs text-sm leading-relaxed text-line">{{ t('storefront.footer.description') }}</p>
           </div>
 
-          <nav :aria-label="t('storefront.footer.shopping')">
-            <h2 class="mb-1 font-semibold">{{ t('storefront.footer.shopping') }}</h2>
-            <ul class="text-sm text-line">
-              <li><NuxtLink :to="localePath({ name: 'catalogue' })" class="storefront-footer-link">{{ t('storefront.nav.explore') }}</NuxtLink></li>
-              <li v-for="selection in storefrontSelections" :key="selection">
-                <NuxtLink :to="localePath({ name: 'catalogue', query: { selection } })" class="storefront-footer-link">{{ t(`storefront.nav.${selection}`) }}</NuxtLink>
-              </li>
-            </ul>
-          </nav>
+          <div class="grid gap-0 lg:contents">
+            <StorefrontFooterGroup :label="t('storefront.footer.shopping')">
+              <ul class="text-sm text-line">
+                <li><NuxtLink :to="localePath({ name: 'catalogue' })" class="storefront-footer-link">{{ t('storefront.nav.explore') }}</NuxtLink></li>
+                <li v-for="selection in storefrontSelections" :key="selection">
+                  <NuxtLink :to="localePath({ name: 'catalogue', query: { selection } })" class="storefront-footer-link">{{ t(`storefront.nav.${selection}`) }}</NuxtLink>
+                </li>
+              </ul>
+            </StorefrontFooterGroup>
 
-          <nav :aria-label="t('storefront.nav.assistance')">
-            <h2 class="mb-1 font-semibold">{{ t('storefront.nav.assistance') }}</h2>
-            <ul class="text-sm text-line">
-              <li><a href="#storefront-assistance" class="storefront-footer-link">{{ t('storefront.footer.help') }}</a></li>
-              <li><NuxtLink :to="destination('account')" :aria-disabled="!destination('account') || undefined" class="storefront-footer-link">{{ t('storefront.nav.account') }}</NuxtLink></li>
-            </ul>
-            <NuxtLink v-if="whatsappUrl" :to="whatsappUrl" external class="storefront-footer-link gap-2 text-sm text-brand">
-              <Icon name="ion:logo-whatsapp" size="20" aria-hidden="true" /> {{ t('storefront.footer.contactWhatsApp') }}
-            </NuxtLink>
-            <p v-else class="mt-2 flex items-center gap-2 text-sm text-line">
-              <Icon name="ion:logo-whatsapp" size="20" aria-hidden="true" /> {{ t('storefront.footer.whatsappPending') }}
-            </p>
-          </nav>
+            <StorefrontFooterGroup :label="t('storefront.nav.assistance')">
+              <ul class="text-sm text-line">
+                <li><a href="#storefront-assistance" class="storefront-footer-link">{{ t('storefront.footer.help') }}</a></li>
+                <li><NuxtLink :to="destination('account')" :aria-disabled="!destination('account') || undefined" class="storefront-footer-link">{{ t('storefront.nav.account') }}</NuxtLink></li>
+              </ul>
+              <NuxtLink v-if="whatsappUrl" :to="whatsappUrl" external class="storefront-footer-link gap-2 text-sm text-brand">
+                <Icon name="ion:logo-whatsapp" size="20" aria-hidden="true" /> {{ t('storefront.footer.contactWhatsApp') }}
+              </NuxtLink>
+              <p v-else class="mt-2 flex items-center gap-2 text-sm text-line">
+                <Icon name="ion:logo-whatsapp" size="20" aria-hidden="true" /> {{ t('storefront.footer.whatsappPending') }}
+              </p>
+            </StorefrontFooterGroup>
 
-          <nav :aria-label="t('storefront.footer.legal')">
-            <h2 class="mb-1 font-semibold">{{ t('storefront.footer.legal') }}</h2>
-            <ul class="text-sm text-line">
-              <li><NuxtLink :to="destination('legal')" :aria-disabled="!destination('legal') || undefined" class="storefront-footer-link">{{ t('storefront.nav.legal') }}</NuxtLink></li>
-              <li><NuxtLink :to="destination('privacy')" :aria-disabled="!destination('privacy') || undefined" class="storefront-footer-link">{{ t('storefront.nav.privacy') }}</NuxtLink></li>
-            </ul>
-          </nav>
+            <StorefrontFooterGroup :label="t('storefront.footer.legal')">
+              <ul class="text-sm text-line">
+                <li><NuxtLink :to="destination('legal')" :aria-disabled="!destination('legal') || undefined" class="storefront-footer-link">{{ t('storefront.nav.legal') }}</NuxtLink></li>
+                <li><NuxtLink :to="destination('privacy')" :aria-disabled="!destination('privacy') || undefined" class="storefront-footer-link">{{ t('storefront.nav.privacy') }}</NuxtLink></li>
+              </ul>
+            </StorefrontFooterGroup>
+          </div>
         </div>
         <div class="flex flex-wrap items-center justify-between gap-x-4 border-t border-white/20 py-2">
           <p class="text-xs text-line">{{ t('storefront.footer.copyright') }}</p>

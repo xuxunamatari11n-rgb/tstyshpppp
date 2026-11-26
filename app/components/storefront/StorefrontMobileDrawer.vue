@@ -5,7 +5,6 @@ import { storefrontCategories } from '~/mocks/storefront'
 const { id } = defineProps<{ id: string }>()
 const { t } = useI18n()
 const route = useRoute()
-const localePath = useLocalePath()
 const destination = useStorefrontDestination()
 const catalogue = useHomeCatalogueLink()
 const whatsappUrl = useWhatsAppContact()
@@ -82,7 +81,7 @@ defineExpose({ open })
                 </summary>
                 <ul>
                   <li v-for="subcategory in category.subcategories" :key="subcategory">
-                    <NuxtLink :to="localePath({ name: 'catalogue', query: { category: category.slug, subcategory } })" class="storefront-drawer-link">
+                    <NuxtLink :to="catalogue({ categoryId: category.id, subcategory })" class="storefront-drawer-link">
                       {{ t(`storefront.subcategories.${subcategory}`) }}
                     </NuxtLink>
                   </li>

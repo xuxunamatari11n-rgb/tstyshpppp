@@ -5,6 +5,7 @@ const props = defineProps<{
 }>()
 const emit = defineEmits<{ choose: [term: string]; navigate: [] }>()
 const { t } = useI18n()
+const catalogue = useHomeCatalogueLink()
 const localePath = useLocalePath()
 const matches = useStorefrontSearchResults(toRef(props, 'query'))
 </script>
@@ -25,9 +26,9 @@ const matches = useStorefrontSearchResults(toRef(props, 'query'))
         <p v-else class="text-sm text-muted-ink">{{ t('storefront.search.noRecent') }}</p>
       </div>
       <div>
-        <h3 class="mb-2 text-sm font-semibold">{{ t('storefront.search.popular') }}</h3>
+        <h3 class="mb-2 text-sm font-semibold">{{ t('storefront.search.suggested') }}</h3>
         <ul class="flex flex-wrap gap-2">
-          <li v-for="term in matches.popular" :key="term">
+          <li v-for="term in matches.suggested" :key="term">
             <UiButton variant="outline" data-search-option @click="emit('choose', term)">{{ term }}</UiButton>
           </li>
         </ul>
@@ -41,7 +42,7 @@ const matches = useStorefrontSearchResults(toRef(props, 'query'))
         <ul>
           <li v-for="category in matches.categories" :key="category.id">
             <NuxtLink
-              :to="localePath({ name: 'catalogue', query: { category: category.slug } })"
+              :to="catalogue({ categoryId: category.id })"
               class="storefront-suggestion"
               data-search-option
               @click="emit('navigate')"
@@ -55,9 +56,10 @@ const matches = useStorefrontSearchResults(toRef(props, 'query'))
         <h3 class="mb-1 text-sm font-semibold">{{ t('storefront.search.products') }}</h3>
         <ul>
           <li v-for="product in matches.products" :key="product.id">
-            <button class="storefront-suggestion" type="button" data-search-option @click="emit('choose', product.label)">
-              <Icon name="ion:search-outline" size="18" aria-hidden="true" /> {{ product.label }}
-            </button>
+            <NuxtLink :to="localePath({ name: 'product', params: { slug: product.slug } })" class="storefront-suggestion"
+              data-search-option @click="emit('navigate')">
+              <Icon name="ion:cube-outline" size="18" aria-hidden="true" /> {{ product.label }}
+            </NuxtLink>
           </li>
         </ul>
       </div>

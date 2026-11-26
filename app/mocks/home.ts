@@ -22,10 +22,11 @@ function product(
   categoryId: CommercialProduct['categoryId'],
   photo: CommercialImage,
   price: number,
+  createdAt: string,
   options: Partial<Pick<CommercialProduct, 'available' | 'featured' | 'newArrival' | 'previousPrice' | 'subcategoryId'>>,
 ): CommercialProduct {
   return {
-    id, slug: id, categoryId, images: [photo], price,
+    id, slug: id, categoryId, images: [photo], price, createdAt,
     nameKey: `home.products.${id}.name`,
     descriptionKey: `home.products.${id}.description`,
     available: true, featured: false, newArrival: false,
@@ -34,14 +35,14 @@ function product(
 }
 
 export const homeProducts: readonly CommercialProduct[] = [
-  product('stride-sneaker', 'fashion', heroImages.sneaker, 22500, { subcategoryId: 'shoes', previousPrice: 30000, featured: true }),
-  product('pulse-headphones', 'electronics', heroImages.headphones, 15000, { subcategoryId: 'audio', previousPrice: 20000, featured: true }),
-  product('desk-lamp', 'home', heroImages.lamp, 12500, { subcategoryId: 'lighting', previousPrice: 16000, newArrival: true }),
-  product('studio-care', 'beauty', image('category-beauty', 512, 512), 7500, { subcategoryId: 'skincare', previousPrice: 10000 }),
-  product('everyday-bag', 'fashion', heroImages.bag, 11000, { subcategoryId: 'bags', newArrival: true, featured: true }),
-  product('training-kit', 'sport', image('category-sport', 512, 512), 14000, { subcategoryId: 'fitness', newArrival: true }),
-  product('stacking-rings', 'children', image('category-children', 512, 512), 6500, { subcategoryId: 'toys', newArrival: true, featured: true }),
-  product('pocket-speaker', 'electronics', image('category-electronics', 512, 512), 18500, { subcategoryId: 'audio', featured: true }),
+  product('stride-sneaker', 'fashion', heroImages.sneaker, 22500, '2026-10-08', { subcategoryId: 'shoes', previousPrice: 30000, featured: true }),
+  product('pulse-headphones', 'electronics', heroImages.headphones, 15000, '2026-10-12', { subcategoryId: 'audio', previousPrice: 20000, featured: true }),
+  product('desk-lamp', 'home', heroImages.lamp, 12500, '2026-11-13', { subcategoryId: 'lighting', previousPrice: 16000, newArrival: true }),
+  product('studio-care', 'beauty', image('category-beauty', 512, 512), 7500, '2026-10-21', { subcategoryId: 'skincare', previousPrice: 10000 }),
+  product('everyday-bag', 'fashion', heroImages.bag, 11000, '2026-11-24', { subcategoryId: 'bags', newArrival: true, featured: true }),
+  product('training-kit', 'sport', image('category-sport', 512, 512), 14000, '2026-11-22', { subcategoryId: 'fitness', newArrival: true }),
+  product('stacking-rings', 'children', image('category-children', 512, 512), 6500, '2026-11-18', { subcategoryId: 'toys', newArrival: true, featured: true }),
+  product('pocket-speaker', 'electronics', image('category-electronics', 512, 512), 18500, '2026-10-29', { subcategoryId: 'audio', featured: true }),
 ]
 
 export const homeCollections = [

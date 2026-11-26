@@ -1,9 +1,7 @@
 <script setup lang="ts">
-import { useProductInteractions } from '~/composables/useProductInteractions'
 import { homeCollections } from '~/mocks/home'
 
 const { t } = useI18n()
-const { favorites, added, message, favorite, add } = useProductInteractions()
 useSeoMeta({
   title: () => t('home.pageTitle'),
   description: () => t('home.pageDescription'),
@@ -14,12 +12,11 @@ useSeoMeta({
   <UiContainer class="home-page">
     <HomeHero />
     <HomeCategoryStrip />
-    <HomeCollection :collection="homeCollections[0]" :favorites="favorites" :added="added" @favorite="favorite" @add="add" />
+    <HomeCollection :collection="homeCollections[0]" />
     <HomeCampaigns />
-    <HomeCollection :collection="homeCollections[1]" :favorites="favorites" :added="added" @favorite="favorite" @add="add" />
+    <HomeCollection :collection="homeCollections[1]" />
     <HomeUniverses />
-    <HomeCollection :collection="homeCollections[2]" :favorites="favorites" :added="added" @favorite="favorite" @add="add" />
+    <HomeCollection :collection="homeCollections[2]" />
     <HomeWhatsApp />
-    <div role="status" aria-live="polite" class="home-feedback" :class="{ 'sr-only': !message }">{{ message }}</div>
   </UiContainer>
 </template>

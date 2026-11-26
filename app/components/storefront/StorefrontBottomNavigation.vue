@@ -15,7 +15,7 @@ const destinations = [
 ] as const
 
 function isActive(name: typeof destinations[number]['name']) {
-  return current.value === name || (name === 'catalogue' && current.value === 'search')
+  return current.value === name || (name === 'catalogue' && (current.value === 'search' || current.value === 'category'))
 }
 </script>
 

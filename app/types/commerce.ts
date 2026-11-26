@@ -18,12 +18,23 @@ export interface CommercialProduct {
   descriptionKey: string
   categoryId: CategoryId
   subcategoryId?: string
-  images: readonly [CommercialImage, ...CommercialImage[]]
+  images: readonly CommercialImage[]
   price: number
   previousPrice?: number
   available: boolean
+  createdAt: string
   featured: boolean
   newArrival: boolean
+  fullDescriptionKey?: string
+  specifications?: readonly { labelKey: string; valueKey: string }[]
+  deliveryKey?: string
+  stockQuantity?: number
+  relatedProductIds?: readonly string[]
+}
+
+export interface CartLineRequest {
+  productId: string
+  quantity: number
 }
 
 export interface CommercialCampaign {

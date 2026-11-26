@@ -1,8 +1,6 @@
 import tailwindcss from '@tailwindcss/vite'
 
 const storefrontPublicPaths = {
-  catalogue: { fr: '/catalogue', es: '/catalogo' },
-  search: { fr: '/recherche', es: '/buscar' },
   favorites: { fr: '/favoris', es: '/favoritos' },
   cart: { fr: '/panier', es: '/carrito' },
   account: { fr: '/compte', es: '/cuenta' },
@@ -17,7 +15,7 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
   pages: true,
-  css: ['~/assets/css/main.css', '~/assets/css/storefront.css', '~/assets/css/home.css'],
+  css: ['~/assets/css/main.css', '~/assets/css/storefront.css', '~/assets/css/home.css', '~/assets/css/catalogue.css', '~/assets/css/product.css'],
   app: {
     head: {
       viewport: 'width=device-width, initial-scale=1, viewport-fit=cover',

@@ -3,12 +3,12 @@ import type { CategoryId, CollectionId } from '~/types/commerce'
 
 export function useHomeCatalogueLink() {
   const localePath = useLocalePath()
-  return (filter?: { categoryId?: CategoryId; selection?: CollectionId }) => {
+  return (filter?: { categoryId?: CategoryId; selection?: CollectionId; subcategory?: string }) => {
     const category = storefrontCategories.find(entry => entry.id === filter?.categoryId)
-    return localePath({
-      name: 'catalogue',
-      query: { category: category?.slug, selection: filter?.selection },
-    })
+    const query = { selection: filter?.selection, subcategory: filter?.subcategory }
+    return localePath(category
+      ? { name: 'category', params: { slug: category.slug }, query }
+      : { name: 'catalogue', query })
   }
 }
 

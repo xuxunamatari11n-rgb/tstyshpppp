@@ -202,7 +202,10 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1.5rem clamp(0.75rem, 3vw, 1rem);
 }
-.home-product-photo { position: relative; }
+.home-product { display: flex; min-width: 0; height: 100%; flex-direction: column; }
+.home-product-photo { position: relative; flex: none; }
+.home-product-photo-link { display: block; width: 100%; height: 100%; }
+.home-product-photo-link:focus-visible { outline-offset: -4px; }
 .home-product-cutout img {
   object-fit: contain;
   padding: 8%;
@@ -230,12 +233,14 @@
   color: var(--color-muted-ink);
   font-size: 0.8125rem;
 }
-.home-product-name { margin-block: 0.1rem 0.375rem; font-size: clamp(0.9375rem, 2.4vw, 1rem); font-weight: 500; line-height: 1.25; }
+.home-product-name { min-height: 2lh; margin-block: 0.1rem 0.375rem; font-size: clamp(0.9375rem, 2.4vw, 1rem); font-weight: 500; line-height: 1.25; overflow-wrap: anywhere; }
+.home-product-name a:hover { text-decoration: underline; text-underline-offset: 3px; }
 .home-product-line {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: end;
   gap: 0.4rem;
+  margin-top: auto;
 }
 .home-product-prices {
   display: flex;
@@ -411,17 +416,6 @@
   line-height: 1.05;
 }
 
-.home-feedback:not(.sr-only) {
-  position: fixed;
-  z-index: 50;
-  inset: auto 1rem calc(5rem + var(--storefront-safe-bottom, 0px)) auto;
-  max-width: min(27rem, calc(100vw - 2rem));
-  border-radius: var(--radius-standard);
-  padding: 0.75rem 1rem;
-  background: var(--color-ink);
-  color: var(--color-surface);
-  font-size: 0.875rem;
-}
 
 @media (min-width: 22.5rem) {
   .home-hero-side { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -468,7 +462,6 @@
   .home-product-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1.5rem; }
   .home-campaign { min-height: clamp(15rem, 21vw, 20rem); }
   .home-universe-grid { grid-auto-rows: clamp(11rem, 18vw, 15rem); }
-  .home-feedback:not(.sr-only) { inset-block-end: 1.5rem; }
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -492,3 +485,12 @@
   .home-product:not(.home-product-unavailable):hover .home-product-photo img { scale: 1.065; }
 }
 
+
+@media (max-width: 39.999rem) {
+  .home-product-prices {
+    display: grid;
+    grid-template-rows: auto minmax(1rem, auto);
+    justify-items: start;
+    row-gap: 0.125rem;
+  }
+}

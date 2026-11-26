@@ -3,6 +3,7 @@ import type { Ref } from 'vue'
 export function useStorefrontModal(
   dialog: Readonly<Ref<HTMLDialogElement | null>>,
   initialFocus: Readonly<Ref<HTMLElement | null>>,
+  options: { mobileOnly?: boolean } = {},
 ) {
   const active = ref(false)
   const route = useRoute()
@@ -52,7 +53,7 @@ export function useStorefrontModal(
 
   function trapFocus(event: KeyboardEvent) {
     const candidates = [...(dialog.value?.querySelectorAll<HTMLElement>(
-      'a[href], button:not([disabled]), input:not([disabled]), summary, [tabindex]:not([tabindex="-1"])',
+      'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), summary, [tabindex]:not([tabindex="-1"])',
     ) ?? [])].filter(element =>
       element.tabIndex >= 0
       && element.getClientRects().length
@@ -79,6 +80,7 @@ export function useStorefrontModal(
 
   watch(() => route.fullPath, () => close(false))
   onMounted(() => {
+    if (options.mobileOnly === false) return
     desktop = window.matchMedia('(min-width: 64rem)')
     desktop.addEventListener('change', breakpointChanged)
   })

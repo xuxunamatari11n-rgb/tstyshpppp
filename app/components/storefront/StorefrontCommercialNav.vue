@@ -4,6 +4,7 @@ import promotionImage from '~/assets/design-system/tech-accessories.webp'
 
 const { t } = useI18n()
 const localePath = useLocalePath()
+const catalogue = useHomeCatalogueLink()
 const root = useTemplateRef('root')
 const trigger = useTemplateRef('trigger')
 const panel = useTemplateRef('panel')
@@ -100,7 +101,7 @@ const motion = useStorefrontTransition()
             <div class="min-w-0 p-5">
               <h2 class="mb-2 text-lg font-semibold">{{ t(`storefront.categories.${category.id}`) }}</h2>
               <NuxtLink
-                :to="localePath({ name: 'catalogue', query: { category: category.slug } })"
+                :to="catalogue({ categoryId: category.id })"
                 class="storefront-text-link inline-flex min-h-11 items-center gap-2 text-sm font-semibold"
                 @click="close()"
               >
@@ -110,7 +111,7 @@ const motion = useStorefrontTransition()
               <ul class="mt-2 border-t border-line pt-2">
                 <li v-for="id in category.subcategories" :key="id">
                   <NuxtLink
-                    :to="localePath({ name: 'catalogue', query: { category: category.slug, subcategory: id } })"
+                    :to="catalogue({ categoryId: category.id, subcategory: id })"
                     class="storefront-suggestion"
                     @click="close()"
                   >{{ t(`storefront.subcategories.${id}`) }}</NuxtLink>
@@ -120,7 +121,7 @@ const motion = useStorefrontTransition()
 
             <div class="p-3 ps-0">
               <NuxtLink
-                :to="localePath({ name: 'catalogue', query: { category: storefrontFeaturedCategory.slug } })"
+                :to="catalogue({ categoryId: storefrontFeaturedCategory.id })"
                 class="block overflow-hidden rounded-standard bg-brand text-brand-foreground"
                 @click="close()"
               >

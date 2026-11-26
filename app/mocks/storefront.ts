@@ -15,6 +15,6 @@ export const storefrontCategories = [
   { id: 'other', slug: 'autres-produits', subcategories: ['daily', 'gifts', 'travel'] },
 ] as const
 
-export const popularSearches = ['headphones', 'bags', 'decor'] as const
+export const suggestedSearches = ['headphones', 'bags', 'decor'] as const
 export const storefrontSelections = ['new', 'bestsellers', 'promotions'] as const
 

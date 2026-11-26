@@ -428,6 +428,20 @@
   align-items: center;
 }
 
+.storefront-footer-disclosure { border-top: 1px solid rgb(255 255 255 / 0.2); }
+.storefront-footer-disclosure summary {
+  display: flex;
+  min-height: 48px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  font-weight: 600;
+  list-style: none;
+  cursor: pointer;
+}
+.storefront-footer-disclosure summary::-webkit-details-marker { display: none; }
+.storefront-footer-disclosure[open] summary .iconify { rotate: 180deg; }
+
 .storefront-layout a[aria-disabled="true"] {
   opacity: 0.72;
   cursor: default;
