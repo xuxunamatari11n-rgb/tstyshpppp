@@ -1,0 +1,24 @@
+<script setup lang="ts">
+import { homeUniverses } from '~/mocks/home'
+
+const { t } = useI18n()
+const catalogue = useHomeCatalogueLink()
+</script>
+
+<template>
+  <section class="home-section" aria-labelledby="home-universes-title">
+    <UiSectionHeading id="home-universes-title" :title="t('home.universes.title')" />
+    <ul class="home-universe-grid">
+      <li v-for="universe in homeUniverses" :key="universe.id">
+        <NuxtLink class="home-universe" :to="catalogue(universe)">
+          <img :src="universe.image.src" :width="universe.image.width" :height="universe.image.height" :alt="t(universe.image.altKey)" loading="lazy" decoding="async">
+          <span class="home-universe-caption">
+            {{ t(`home.universes.${universe.id}`) }}
+            <Icon name="ion:arrow-forward-outline" size="22" aria-hidden="true" />
+          </span>
+        </NuxtLink>
+      </li>
+    </ul>
+  </section>
+</template>
+

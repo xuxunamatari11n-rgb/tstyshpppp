@@ -1,0 +1,343 @@
+{
+  "language": "Idioma",
+  "loading": "Cargando…",
+  "guide": {
+    "title": "Guía de estilo",
+    "intro": "La identidad visual de Testy Shop, desde la campaña promocional hasta la ficha de producto.",
+    "skip": "Ir al contenido",
+    "contents": "Índice",
+    "sections": {
+      "specimens": { "title": "Comercio en práctica", "description": "Tres ejemplos para evaluar la identidad de la marca en situaciones de compra." },
+      "palette": { "title": "Paleta", "description": "Superficies neutras y un verde eléctrico reservado para las acciones prioritarias y los contenidos destacados." },
+      "typography": { "title": "Tipografía", "description": "General Sans da una voz coherente a la marca, las campañas y la interfaz." },
+      "actions": { "title": "Acciones", "description": "Cinco variantes de botón con estados de puntero, foco, carga y desactivación." },
+      "forms": { "title": "Formularios", "description": "Cada campo tiene una etiqueta visible. Las indicaciones y los errores se asocian al campo." },
+      "feedback": { "title": "Estados e iconos", "description": "Las etiquetas explican los estados. Los iconos lineales acompañan las acciones." },
+      "layout": { "title": "Espaciado y movimiento", "description": "Los márgenes se adaptan a la pantalla. Las animaciones respetan las preferencias de movimiento del dispositivo." }
+    },
+    "colors": {
+      "canvas": "Fondo",
+      "surface": "Superficie",
+      "ink": "Tinta",
+      "muted": "Gris atenuado",
+      "brand": "Marca",
+      "brand-hover": "Marca al pasar el puntero",
+      "brand-foreground": "Texto sobre la marca",
+      "line": "Separación",
+      "subtle": "Fondo tenue",
+      "success": "Éxito",
+      "danger": "Error",
+      "whatsapp": "WhatsApp"
+    },
+    "type": {
+      "display": "Energía a tope",
+      "interface": "Jerarquía de la interfaz",
+      "section": "Los más vendidos",
+      "product": "Auriculares inalámbricos Pulse",
+      "body": "Las descripciones, la navegación y los formularios comparten una tipografía clara."
+    },
+    "buttons": {
+      "primary": "Principal",
+      "secondary": "Secundario",
+      "outline": "Contorno",
+      "ghost": "Discreto",
+      "whatsapp": "WhatsApp",
+      "disabled": "Desactivado"
+    },
+    "selected": "Acción activada: {action}",
+    "specimenSelected": "Acción de demostración: {action}",
+    "fields": {
+      "name": "Nombre",
+      "email": "Correo electrónico",
+      "emailError": "Introduce una dirección de correo electrónico válida.",
+      "contact": "Método de contacto",
+      "choose": "Elige una opción",
+      "disabled": "Campo desactivado",
+      "disabledValue": "No disponible",
+      "note": "Nota",
+      "noteHint": "Campo opcional.",
+      "updates": "Recibir novedades"
+    },
+    "badges": { "neutral": "Estándar", "brand": "Nuevo", "discount": "Oferta", "featured": "Destacado", "success": "Disponible", "danger": "No disponible" },
+    "icons": { "bag": "Cesta", "search": "Buscar", "heart": "Favoritos", "person": "Cuenta", "arrow": "Siguiente" },
+    "empty": { "title": "Sin resultados", "description": "Prueba con otro término de búsqueda." },
+    "spacing": "Escala de espaciado",
+    "motion": { "title": "Animación de entrada", "sample": "Aparición del contenido", "replay": "Repetir animación" },
+    "specimens": {
+      "banner": "Banner promocional",
+      "campaignTitle": "Ofertas en tecnología",
+      "campaignBody": "Tus básicos tecnológicos al mejor precio.",
+      "campaignAction": "Ver selección",
+      "productCard": "Tarjeta de producto",
+      "productCategory": "Audio",
+      "productImage": "Auriculares inalámbricos negros sobre fondo gris",
+      "discount": "−{percent} %",
+      "previousPrice": "Precio anterior",
+      "favorite": "Favorito",
+      "add": "Añadir al carrito",
+      "categoryTile": "Tarjeta de categoría",
+      "category": "Accesorios tecnológicos"
+    }
+  },
+  "storefront": {
+    "wordmarkLabel": "testyshop. – Inicio",
+    "announcement": "Descubre las novedades y ofertas de Testy Shop.",
+    "cartCount": "Carrito, {count} artículo | Carrito, {count} artículos",
+    "nav": {
+      "home": "Inicio",
+      "explore": "Explorar",
+      "favorites": "Favoritos",
+      "cart": "Carrito",
+      "account": "Cuenta",
+      "legal": "Aviso legal",
+      "privacy": "Privacidad",
+      "assistance": "Ayuda",
+      "actions": "Accesos directos de la tienda",
+      "mobile": "Navegación principal",
+      "commercial": "Navegación del catálogo",
+      "allCategories": "Todas las categorías",
+      "new": "Novedades",
+      "bestsellers": "Más vendidos",
+      "promotions": "Ofertas",
+      "viewCategory": "Ver toda la categoría",
+      "discoverTech": "Explorar accesorios tecnológicos"
+    },
+    "categories": {
+      "fashion": "Moda y accesorios",
+      "electronics": "Electrónica",
+      "home": "Hogar y decoración",
+      "beauty": "Belleza y bienestar",
+      "sport": "Deporte y ocio",
+      "children": "Infantil y juguetes",
+      "office": "Oficina y papelería",
+      "other": "Otros productos"
+    },
+    "subcategories": {
+      "clothing": "Ropa",
+      "shoes": "Calzado",
+      "bags": "Bolsos y accesorios",
+      "phones": "Teléfonos",
+      "audio": "Audio",
+      "computing": "Informática",
+      "decor": "Decoración",
+      "lighting": "Iluminación",
+      "kitchen": "Cocina",
+      "skincare": "Cuidado de la piel",
+      "haircare": "Cuidado del cabello",
+      "wellness": "Bienestar",
+      "fitness": "Fitness",
+      "outdoors": "Aire libre",
+      "games": "Juegos y pasatiempos",
+      "toys": "Juguetes",
+      "creative": "Manualidades",
+      "baby": "Productos para bebés",
+      "stationery": "Papelería",
+      "organization": "Organización",
+      "officeAccessories": "Accesorios de oficina",
+      "daily": "Básicos del día a día",
+      "gifts": "Ideas para regalar",
+      "travel": "Accesorios de viaje"
+    },
+    "products": {
+      "headphones": "Auriculares inalámbricos Pulse",
+      "speaker": "Altavoz de bolsillo",
+      "bag": "Bolso para el día a día",
+      "lamp": "Lámpara de escritorio"
+    },
+    "popular": {
+      "headphones": "Auriculares inalámbricos",
+      "bags": "Bolsos",
+      "decor": "Decoración"
+    },
+    "search": {
+      "title": "Buscar",
+      "placeholder": "Buscar productos, categorías…",
+      "openWithQuery": "Buscar: {query}",
+      "submit": "Realizar búsqueda",
+      "clear": "Borrar búsqueda",
+      "back": "Cerrar búsqueda",
+      "suggestions": "Sugerencias de búsqueda",
+      "recent": "Búsquedas recientes",
+      "noRecent": "Las búsquedas de esta sesión aparecerán aquí.",
+      "popular": "Búsquedas populares",
+      "categories": "Categorías",
+      "products": "Productos",
+      "noSuggestions": "Sin sugerencias",
+      "retry": "Prueba con otra palabra clave.",
+      "results": "Resultados de búsqueda",
+      "query": "Búsqueda «{query}»",
+      "prompt": "Introduce una palabra clave para explorar los ejemplos."
+    },
+    "trust": {
+      "delivery": {
+        "title": "Envíos",
+        "description": "Encuentra la información que necesitas para preparar tu envío."
+      },
+      "help": {
+        "title": "Atención al cliente",
+        "description": "¿Tienes dudas antes de comprar? Consulta la información de ayuda."
+      },
+      "whatsapp": {
+        "title": "Pedidos por WhatsApp",
+        "description": "Comparte tu selección por WhatsApp cuando el contacto esté disponible."
+      },
+      "discovery": {
+        "title": "Descubre productos",
+        "description": "Recorre las categorías y descubre lo que acaba de llegar."
+      }
+    },
+    "footer": {
+      "reassurance": "Información de compra",
+      "description": "Una tienda para explorar productos del día a día, desde moda y hogar hasta tecnología.",
+      "shopping": "La tienda",
+      "legal": "Información legal",
+      "help": "Información de ayuda",
+      "contactWhatsApp": "Contactar por WhatsApp",
+      "whatsappPending": "Contacto por WhatsApp no disponible",
+      "copyright": "© Testy Shop"
+    },
+    "preview": {
+      "title": "Vista previa de la tienda",
+      "description": "Esta página permite probar la navegación, las categorías y la búsqueda.",
+      "pending": "Esta sección está prevista para una fase posterior.",
+      "categories": "Elige una categoría para probar la navegación del catálogo."
+    }
+  },
+  "home": {
+    "pageTitle": "La tienda para el día a día",
+    "pageDescription": "Explora novedades, ofertas y productos para el día a día en Testy Shop.",
+    "hero": {
+      "label": "La tienda para el día a día",
+      "title": "Todo lo que buscas. Y mucho más.",
+      "description": "Moda, hogar y tecnología. Encuentra tus próximos básicos.",
+      "cta": "Explorar la tienda",
+      "tech": {
+        "label": "Tecnología",
+        "title": "Ofertas en tecnología"
+      },
+      "style": {
+        "label": "Moda y accesorios",
+        "title": "Cambia de estilo"
+      }
+    },
+    "categories": {
+      "title": "Explora por categoría"
+    },
+    "collections": {
+      "promotions": {
+        "title": "Ofertas del momento"
+      },
+      "new": {
+        "title": "Novedades"
+      },
+      "bestsellers": {
+        "title": "Los más vendidos"
+      }
+    },
+    "viewAll": "Ver todo",
+    "viewCollection": "Ver todo · {collection}",
+    "discount": "−{percent} %",
+    "campaigns": {
+      "title": "Colecciones para descubrir",
+      "living": {
+        "label": "Hogar y vida cotidiana",
+        "title": "A gusto en casa",
+        "description": "Objetos sencillos para disfrutar más de cada habitación.",
+        "cta": "Explorar hogar"
+      },
+      "wear": {
+        "label": "Moda y accesorios",
+        "title": "Todo listo para tu día",
+        "description": "Accesorios prácticos para acompañar tu ritmo.",
+        "cta": "Explorar moda"
+      }
+    },
+    "universes": {
+      "title": "Explora por universo",
+      "tech": "Tecnología e innovación",
+      "style": "Estilo y accesorios",
+      "home": "Hogar y estilo de vida"
+    },
+    "whatsapp": {
+      "label": "Pedidos por WhatsApp",
+      "title": "Una conversación y listo.",
+      "description": "Encuentra lo que te gusta y envía tu solicitud de pedido por WhatsApp cuando el contacto esté disponible.",
+      "steps": {
+        "discover": {
+          "title": "Descubre tus productos",
+          "description": "Recorre las categorías y encuentra lo que te gusta."
+        },
+        "select": {
+          "title": "Prepara tu selección",
+          "description": "Anota los productos y las cantidades que te interesan."
+        },
+        "send": {
+          "title": "Envía tu solicitud",
+          "description": "Comparte tu selección con el contacto de Testy Shop por WhatsApp."
+        }
+      }
+    },
+    "actions": {
+      "favorite": "Favorito · {product}",
+      "add": "Añadir al carrito · {product}",
+      "saved": "{product} añadido a los favoritos de esta página.",
+      "removed": "{product} retirado de los favoritos de esta página.",
+      "added": "{product} añadido a tu selección en esta demostración."
+    },
+    "discovery": {
+      "intro": "Descubre los productos de esta selección.",
+      "empty": "Esta selección no tiene productos.",
+      "filter": "Elegir una categoría"
+    },
+    "images": {
+      "sneaker": "Zapatilla gris clara con suela coral",
+      "headphones": "Auriculares inalámbricos negros con almohadillas",
+      "crossbody": "Bolso bandolera de nailon beige",
+      "dome-lamp": "Lámpara de cúpula crema con base verde",
+      "category-fashion": "Gorra coral y bolso beige",
+      "category-electronics": "Auriculares inalámbricos y altavoz negro",
+      "category-home": "Lámpara de cúpula verde y bandeja",
+      "category-beauty": "Frascos de cuidado y tarro de crema",
+      "category-sport": "Mancuernas azules y botella gris",
+      "category-children": "Anillos de colores y bloques de madera",
+      "universe-tech": "Auriculares y altavoz sobre bloques azules",
+      "universe-style": "Bolso de viaje, zapatilla y gorra sobre bloques coral",
+      "universe-home": "Lámpara verde, bandeja y lino doblado",
+      "campaign-home": "Lámpara de mesa, taza y tejido verde"
+    },
+    "products": {
+      "stride-sneaker": {
+        "name": "Zapatillas Stride",
+        "description": "Zapatillas claras con suela coral para el día a día."
+      },
+      "pulse-headphones": {
+        "name": "Auriculares inalámbricos Pulse",
+        "description": "Auriculares circumaurales negros con almohadillas suaves."
+      },
+      "desk-lamp": {
+        "name": "Lámpara de escritorio Domo",
+        "description": "Una lámpara pequeña con pantalla crema y base verde."
+      },
+      "studio-care": {
+        "name": "Set de cuidado Studio",
+        "description": "Un conjunto de frascos y un tarro de cuidado para el baño."
+      },
+      "everyday-bag": {
+        "name": "Bolso para el día a día",
+        "description": "Un bolso bandolera compacto de nailon beige."
+      },
+      "training-kit": {
+        "name": "Kit de entrenamiento Duo",
+        "description": "Dos mancuernas azules y una botella gris."
+      },
+      "stacking-rings": {
+        "name": "Anillos y bloques de madera",
+        "description": "Un juego de apilamiento de colores con dos bloques de madera."
+      },
+      "pocket-speaker": {
+        "name": "Dúo de audio de bolsillo",
+        "description": "Un altavoz compacto con auriculares inalámbricos."
+      }
+    }
+  }
+}

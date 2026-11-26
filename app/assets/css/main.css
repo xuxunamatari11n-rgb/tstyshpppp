@@ -1,0 +1,170 @@
+@import "tailwindcss";
+
+@theme static {
+  --color-canvas: #FAFAFA;
+  --color-surface: #FFFFFF;
+  --color-ink: #151515;
+  --color-muted: #717171;
+  --color-brand: #C8F135;
+  --color-brand-hover: #B5DC24;
+  --color-brand-foreground: #151515;
+  --color-line: #E5E5E5;
+  --color-subtle: #F2F2F2;
+  --color-success: #16803C;
+  --color-danger: #DC2626;
+  --color-whatsapp: #25D366;
+  --radius-standard: 12px;
+  --radius-button: 9px;
+  --radius-promo: 22px;
+  --font-display: "General Sans", sans-serif;
+  --font-sans: "General Sans", sans-serif;
+  --text-hero: clamp(2.25rem, 6.25vw, 4.75rem);
+  --text-hero--line-height: 1.02;
+  --text-hero--letter-spacing: -0.05em;
+  --text-campaign: clamp(1.5rem, 3.55vw, 3rem);
+  --text-campaign--line-height: 1.08;
+  --text-campaign--letter-spacing: -0.04em;
+  --text-section: clamp(1.5rem, 2.74vw, 2rem);
+  --text-section--line-height: 1.15;
+  --text-section--letter-spacing: -0.035em;
+}
+
+@theme inline {
+  --color-muted-ink: color-mix(in srgb, var(--color-muted) 92%, var(--color-ink));
+  --color-success-ink: color-mix(in srgb, var(--color-success) 80%, var(--color-ink));
+  --color-danger-ink: color-mix(in srgb, var(--color-danger) 80%, var(--color-ink));
+}
+
+:root {
+  --content-max: 1440px;
+  --gutter: 16px;
+  --section-space: clamp(40px, 7.3vw, 56px);
+  --product-gap: clamp(16px, 2vw, 24px);
+  --motion-micro: 180ms;
+  --motion-functional: 300ms;
+  --focus-ring: var(--color-ink);
+  --control-line: color-mix(in srgb, var(--color-muted) 80%, var(--color-line));
+}
+
+@media (min-width: 48rem) {
+  :root { --gutter: 24px; }
+}
+
+@media (min-width: 64rem) {
+  :root {
+    --gutter: 48px;
+    --section-space: clamp(64px, 6.7vw, 96px);
+  }
+}
+
+@layer base {
+  body {
+    @apply bg-canvas font-sans leading-normal text-ink antialiased;
+  }
+
+  :where(a, button, input, textarea, select, [tabindex]):focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 4px;
+  }
+}
+
+@layer components {
+  .ui-container {
+    width: 100%;
+    max-width: var(--content-max);
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+  }
+
+  .ui-button {
+    @apply inline-flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-button border border-transparent px-4 py-2 text-center font-semibold motion-safe:transition-colors motion-safe:duration-(--motion-micro);
+    line-height: 1.25;
+    background: var(--button-bg, transparent);
+    color: var(--button-ink, var(--color-ink));
+  }
+
+  .ui-button:not(:disabled, [aria-disabled="true"]):hover {
+    background: var(--button-hover, var(--color-subtle));
+  }
+
+  .ui-button[data-variant="primary"] {
+    --button-bg: var(--color-brand);
+    --button-ink: var(--color-brand-foreground);
+    --button-hover: var(--color-brand-hover);
+  }
+
+  .ui-button[data-variant="secondary"] {
+    --button-bg: var(--color-ink);
+    --button-ink: var(--color-surface);
+    --button-hover: color-mix(in srgb, var(--color-ink) 85%, var(--color-surface));
+  }
+
+  .ui-button[data-variant="outline"] {
+    border-color: var(--control-line);
+  }
+
+  .ui-button[data-variant="whatsapp"] {
+    --button-bg: var(--color-whatsapp);
+    --button-hover: color-mix(in srgb, var(--color-whatsapp) 88%, var(--color-ink));
+  }
+
+  .ui-button:disabled {
+    @apply cursor-not-allowed border-line bg-subtle text-muted-ink;
+  }
+
+  .ui-button[aria-busy="true"]:not(:disabled) {
+    cursor: progress;
+  }
+
+  .ui-field {
+    @apply grid min-w-0 gap-2;
+  }
+
+  .ui-field label {
+    @apply text-sm font-medium;
+  }
+
+  .ui-control {
+    @apply min-h-11 w-full min-w-0 rounded-standard border bg-surface px-3 py-2 font-normal motion-safe:transition-colors motion-safe:duration-(--motion-micro);
+    border-color: var(--control-line);
+  }
+
+  .ui-control:hover:not(:disabled, [aria-invalid="true"]) {
+    border-color: var(--color-ink);
+  }
+
+  .ui-control[type="number"] {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .ui-control:disabled {
+    @apply cursor-not-allowed border-line bg-subtle text-muted-ink;
+  }
+
+  .ui-control[aria-invalid="true"] {
+    border-color: var(--color-danger);
+  }
+
+  .ui-checkbox[aria-invalid="true"] {
+    outline: 2px solid var(--color-danger);
+    outline-offset: 2px;
+  }
+
+  .ui-checkbox[aria-invalid="true"]:focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 4px;
+  }
+
+  .ui-hint {
+    @apply text-sm text-muted-ink;
+  }
+
+  .ui-error {
+    @apply text-sm font-normal text-danger-ink;
+  }
+}
+
+@media (forced-colors: active) {
+  .ui-control { appearance: auto; }
+  .ui-button { border-color: ButtonText; }
+}

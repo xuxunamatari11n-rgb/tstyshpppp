@@ -1,0 +1,33 @@
+{
+  "name": "testy-shop",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "typecheck": "nuxt typecheck"
+  },
+  "dependencies": {
+    "@iconify-json/ion": "^1.2.8",
+    "@nuxt/fonts": "^1.2.0",
+    "@nuxt/icon": "^2.6.3",
+    "@nuxt/image": "^2.2.1",
+    "@nuxtjs/i18n": "^10.6.0",
+    "@pinia/nuxt": "^1.0.3",
+    "@tailwindcss/vite": "^4.3.5",
+    "gsap": "^3.15.1",
+    "nuxt": "^4.7.0",
+    "pinia": "^4.1.0",
+    "tailwindcss": "^4.3.5",
+    "vue": "^3.5.45",
+    "vue-router": "^5.4.0"
+  },
+  "packageManager": "pnpm@12.4.1",
+  "devDependencies": {
+    "typescript": "^6.0.3",
+    "vue-tsc": "^3.3.11"
+  }
+}
