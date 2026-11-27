@@ -2,7 +2,7 @@
 import type { CommercialProduct } from '~/types/commerce'
 import { productAvailability, productImages, productSavings } from '~/utils/product'
 
-const props = defineProps<{ product: CommercialProduct }>()
+const props = defineProps<{ product: CommercialProduct; preview?: boolean; previewCategory?: string }>()
 const { t } = useI18n()
 const { name } = useProductContent()
 const formatPrice = useShopPrice()
@@ -25,13 +25,14 @@ const cartLabel = computed(() => t(purchasable.value ? 'product.addToCart' : ava
 <template>
   <article class="home-product" :class="{ 'home-product-unavailable': !available }" :data-product-slug="product.slug">
     <div class="home-product-photo" :class="{ 'home-product-cutout': photo?.cutout }">
-      <NuxtLink :to="productLink" class="home-product-photo-link" :aria-label="name(product)">
+      <NuxtLink v-if="!preview" :to="productLink" class="home-product-photo-link" :aria-label="name(product)">
         <ProductPhoto :image="photo" />
       </NuxtLink>
+      <div v-else class="home-product-photo-link"><ProductPhoto :image="photo" /></div>
       <UiBadge v-if="discount" variant="discount" class="home-product-badge">
         <UiNumericText :value="t('home.discount', { percent: discount })" />
       </UiBadge>
-      <UiIconButton
+      <UiIconButton v-if="!preview"
         :icon="isFavorite(product.id) ? 'ion:heart' : 'ion:heart-outline'"
         :label="t('home.actions.favorite', { product: name(product) })"
         :aria-pressed="isFavorite(product.id)"
@@ -41,8 +42,8 @@ const cartLabel = computed(() => t(purchasable.value ? 'product.addToCart' : ava
         @click="toggleFavorite(product.id, $event)"
       />
     </div>
-    <p class="home-product-category">{{ categoryName(product.categoryId) }}</p>
-    <h3 class="home-product-name"><NuxtLink :to="productLink">{{ name(product) }}</NuxtLink></h3>
+    <p class="home-product-category">{{ previewCategory ?? categoryName(product.categoryId) }}</p>
+    <h3 class="home-product-name"><NuxtLink v-if="!preview" :to="productLink">{{ name(product) }}</NuxtLink><span v-else>{{ name(product) }}</span></h3>
     <p v-if="!available" class="home-product-stock">{{ t('product.outOfStock') }}</p>
     <div class="home-product-line">
       <p class="home-product-prices">
@@ -52,7 +53,7 @@ const cartLabel = computed(() => t(purchasable.value ? 'product.addToCart' : ava
           <UiNumericText :value="formatPrice(product.previousPrice)" />
         </del>
       </p>
-      <UiIconButton icon="ion:cart-outline" :label="cartLabel" :title="cartLabel" :disabled="!purchasable"
+      <UiIconButton v-if="!preview" icon="ion:cart-outline" :label="cartLabel" :title="cartLabel" :disabled="!purchasable"
         class="home-product-add commercial-cart" variant="primary" @click="addToCart(product)" />
     </div>
   </article>

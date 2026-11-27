@@ -1,6 +1,8 @@
 import type { H3Event } from 'h3'
 import type { ShopSession } from '~/types/shop'
 
+const inactiveSessionCodes = new Set(['session_not_found', 'session_expired', 'refresh_token_not_found', 'refresh_token_already_used'])
+
 export function shopOrigin(event: H3Event) {
   const raw = useRuntimeConfig(event).siteUrl.trim()
   if (!raw && import.meta.dev) return getRequestURL(event).origin
@@ -21,11 +23,10 @@ export function requireShopOrigin(event: H3Event) {
   }
 }
 
-export async function readShopSession(event: H3Event): Promise<ShopSession | null> {
-  const client = shopSessionClient(event)
+export async function readShopSession(event: H3Event, client = shopSessionClient(event)): Promise<ShopSession | null> {
   const { data: { user }, error } = await client.auth.getUser()
   if (error) {
-    if (error.name === 'AuthSessionMissingError' || error.status === 401 || error.status === 403 || error.code === 'session_not_found') return null
+    if (error.name === 'AuthSessionMissingError' || error.status === 401 || error.status === 403 || inactiveSessionCodes.has(error.code ?? '')) return null
     throw createError({ statusCode: 503, statusMessage: 'Authentication unavailable' })
   }
   if (!user) return null

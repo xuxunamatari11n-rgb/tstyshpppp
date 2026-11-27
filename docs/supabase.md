@@ -70,12 +70,42 @@ In Supabase Auth URL Configuration, set the deployment origin as Site URL and al
 
 Enable email confirmation and configure the hosted SMTP provider before serving real customer traffic. The callback accepts the default PKCE code flow and the token-hash template flow. For a device-independent email template, point the link to `{{ .RedirectTo }}?token_hash={{ .TokenHash }}` in the corresponding confirmation or recovery template. Verify the full email flow on the final domain.
 
-To assign the first administrator, have the intended person register and complete email verification. In the trusted Supabase SQL Editor, look up and verify that account's UUID before running the update below. Ordinary clients have no write grant on the role table.
+### First administrator
+
+Have the intended administrator register at `/compte` or `/es/cuenta` and confirm the account's email. In Wady’s Org, open the `testy-shop` project and verify the user's exact email and UID in **Authentication → Users**. Run the following checks in the project's trusted SQL Editor.
 
 ```sql
-select id, email, email_confirmed_at from auth.users where email = '<verified email>';
-update public.user_roles set role = 'admin' where user_id = '<verified UUID>';
+select u.id, u.email, u.email_confirmed_at, r.role
+from auth.users u
+left join public.user_roles r on r.user_id = u.id
+where u.email = '<verified email>';
 ```
+
+Proceed when there is exactly one matching user, the UID matches the account you verified, `email_confirmed_at` is populated and its existing role is `customer`. For an account with `admin` already assigned, go directly to sign-in. A missing role row is a provisioning issue to resolve before continuing.
+
+Replace both placeholders with the values from that verified row.
+
+```sql
+update public.user_roles r
+set role = 'admin'
+from auth.users u
+where r.user_id = u.id
+  and u.id = '<verified UUID>'
+  and u.email = '<verified email>'
+  and u.email_confirmed_at is not null
+  and r.role = 'customer'
+returning r.user_id, r.role;
+```
+
+Confirm the result is a single row with the intended UID and `admin`, then sign in with the same account at `/admin/connexion` or `/es/admin/acceso`. To revoke access, set that verified UID's role to `customer` from the trusted SQL Editor. Subsequent administrative requests recheck the database role, including authenticated sessions.
+
+### Administrative password recovery
+
+The shared Supabase recovery callback URLs above apply to both entry points. Set the private runtime environment variable `NUXT_REGIE_RECOVERY_SECRET` to a strong random secret of at least 32 characters. On Node, `node -e "console.log(require('node:crypto').randomBytes(32).toString('hex'))"` generates a suitable value. Set it for each environment that serves the admin recovery UI. The dedicated recovery request reports temporary unavailability until this variable is configured. An administrator's successfully verified recovery callback routes to the dedicated form when the secret is configured. The form uses a 15-minute server-signed receipt bound to the verified Supabase session. Keep the existing trusted origin, four callback URLs, confirmation settings and SMTP configuration. [Supabase password recovery](https://supabase.com/docs/guides/auth/passwords)
+
+### Future invitation-only provisioning
+
+A future private workflow can issue an expiring, single-use invitation from a trusted administrator interface. Store only a token digest with the intended email, issuer, expiry and revocation state. The recipient creates or signs into the existing Supabase account and confirms the invited address. A trusted server transaction should then match that confirmed identity, consume the invitation and assign the role, with an audit record. Invitations should support revocation and should keep role assignment out of user-editable registration metadata.
 
 ## Hosted project
 

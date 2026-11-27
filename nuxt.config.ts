@@ -19,6 +19,7 @@ export default defineNuxtConfig({
     supabaseUrl: '',
     supabasePublishableKey: '',
     siteUrl: '',
+    regieRecoverySecret: '',
     public: { whatsappNumber: '', storefrontMock: false },
   },
   modules: [

@@ -474,6 +474,11 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      regie_products: { Args: { filters?: Json }; Returns: Json }
+      regie_categories: { Args: Record<PropertyKey, never>; Returns: Json }
+      regie_store_product: { Args: { payload: Json }; Returns: string }
+      regie_visibility: { Args: { target: string; visible: boolean }; Returns: undefined }
+      regie_store_category: { Args: { payload: Json }; Returns: string }
       set_default_address: { Args: { address_id: string }; Returns: undefined }
       shop_catalogue: {
         Args: {

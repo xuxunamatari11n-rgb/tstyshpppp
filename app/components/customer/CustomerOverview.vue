@@ -16,6 +16,7 @@ const shortcuts = computed(() => [
   { name: 'favorites', key: 'favorites', icon: 'ion:heart-outline',
     info: favoriteStatus.value === 'ready' ? t('commerce.favorites.count', favorites.ids.length) : t('customer.shortcuts.favorites') },
   { name: 'account-addresses', key: 'addresses', icon: 'ion:location-outline',
+    label: t('customer.shortcuts.addressesLabel'),
     info: addressStatus.value === 'ready' ? t('customer.addresses.count', addresses.value.length) : t('customer.shortcuts.addresses') },
   { name: 'account-orders', key: 'orders', icon: 'ion:bag-handle-outline', info: t('customer.shortcuts.orders') },
 ])
@@ -68,15 +69,18 @@ watch([() => user.value?.id, () => favorites.owner, () => favorites.sync, () => 
         </NuxtLink>
       </div>
     </section>
-    <ul class="customer-shortcuts" :aria-label="t('customer.shortcuts.title')">
-      <li v-for="service in shortcuts" :key="service.name">
-        <NuxtLink :to="path(service.name)" class="customer-shortcut">
-          <span class="customer-shortcut-icon"><Icon :name="service.icon" size="21" aria-hidden="true" /></span>
-          <span><strong>{{ t(`customer.nav.${service.key}`) }}</strong><small>{{ service.info }}</small></span>
-          <Icon class="customer-shortcut-arrow" name="ion:arrow-forward-outline" size="18" aria-hidden="true" />
-        </NuxtLink>
-      </li>
-    </ul>
+    <nav :aria-label="t('customer.shortcuts.title')">
+      <ul class="customer-shortcuts">
+        <li v-for="service in shortcuts" :key="service.name">
+          <NuxtLink :to="path(service.name)" class="customer-shortcut">
+            <span class="customer-shortcut-icon"><Icon :name="service.icon" class="customer-shortcut-symbol" aria-hidden="true" /></span>
+            <span><strong>{{ service.label ?? t(`customer.nav.${service.key}`) }}</strong><small>{{ service.info }}</small></span>
+            <Icon class="customer-shortcut-chevron" name="ion:chevron-forward-outline" aria-hidden="true" />
+            <Icon class="customer-shortcut-arrow" name="ion:arrow-forward-outline" size="18" aria-hidden="true" />
+          </NuxtLink>
+        </li>
+      </ul>
+    </nav>
     <section class="customer-recent" aria-labelledby="customer-recent-title">
       <div class="customer-section-head">
         <h2 id="customer-recent-title">{{ t('customer.recent.title') }}</h2>

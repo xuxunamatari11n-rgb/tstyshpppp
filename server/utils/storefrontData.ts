@@ -32,7 +32,7 @@ function localized(value: Json, locale: ShopLocale) {
   return typeof text === 'string' && text.trim() ? text : typeof french === 'string' ? french : undefined
 }
 
-function imageUrl(client: Client, bucket: 'category-images' | 'product-images', path: string | null) {
+export function imageUrl(client: Client, bucket: 'category-images' | 'product-images', path: string | null) {
   if (!path) return
   if (/^\/images\/home\/[a-z0-9-]+\.webp$/.test(path)) return path
   if (/^[a-z0-9-]+\/[a-z0-9-]+\.(webp|jpeg|jpg|png|avif)$/.test(path)) return client.storage.from(bucket).getPublicUrl(path).data.publicUrl

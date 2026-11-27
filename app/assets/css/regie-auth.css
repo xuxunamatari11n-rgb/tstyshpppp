@@ -1,0 +1,109 @@
+.regie-auth {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  min-height: 100dvh;
+  color: var(--color-ink);
+  background: var(--color-surface);
+  font-family: var(--font-sans);
+}
+.regie-auth-brand {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+  padding: 15px 20px;
+  color: var(--color-surface);
+  background: var(--color-ink);
+}
+.regie-auth-wordmark { display: flex; align-items: center; flex-wrap: wrap; gap: 0 13px; }
+.regie-auth-wordmark > span { color: var(--color-brand); font-size: .8rem; font-weight: 600; }
+.regie-auth-brand-message { display: none; }
+.regie-auth-shape {
+  position: absolute;
+  z-index: -1;
+  inset-inline-end: 4%;
+  bottom: -28px;
+  width: 100px;
+  height: 95px;
+  transform: skewX(-18deg);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 7px;
+}
+.regie-auth-shape > span { border: 1px solid color-mix(in srgb, var(--color-brand) 60%, var(--color-ink)); }
+.regie-auth-shape > span:first-child { background: var(--color-brand); }
+.regie-auth-shape > span:last-child { translate: 0 22%; }
+.regie-auth-workspace { display: grid; grid-template-rows: auto 1fr; min-width: 0; }
+.regie-auth-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 2px 12px;
+  min-height: 56px;
+  border-bottom: 1px solid var(--color-line);
+  padding: 4px 20px;
+}
+.regie-auth-nav ul { flex-wrap: nowrap; }
+.regie-auth-nav nav a { min-width: 38px; }
+.regie-auth-content { display: grid; justify-items: center; align-content: start; padding: 32px 20px 52px; }
+.regie-auth-panel { width: min(100%, 390px); display: grid; gap: 20px; min-width: 0; }
+.regie-auth-badge {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  color: var(--color-ink);
+  background: color-mix(in srgb, var(--color-brand) 45%, var(--color-surface));
+  border-radius: 12px;
+}
+.regie-auth-heading { display: grid; gap: 8px; }
+.regie-auth-heading h1 { font-size: clamp(1.8rem, 4.8vw, 2.55rem); font-weight: 700; letter-spacing: -.045em; line-height: 1.07; }
+.regie-auth-heading p { font-size: .95rem; line-height: 1.5; color: var(--color-muted-ink); }
+.regie-auth-form { display: grid; gap: 14px; align-items: start; }
+.regie-auth-form .ui-button { width: 100%; justify-content: center; }
+.regie-auth-link { display: inline-flex; min-height: 44px; width: fit-content; align-items: center; gap: 6px; font-size: .875rem; font-weight: 600; }
+.regie-auth-link:hover { text-decoration: underline; text-underline-offset: 4px; }
+.regie-auth-forgot { justify-self: end; margin-block: -7px; }
+.regie-auth input:is([autocomplete="current-password"], [autocomplete="new-password"]) { padding-inline-end: 48px; }
+.regie-auth .auth-password-toggle {
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-end: 2px;
+  translate: 0 -50%;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 42px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.regie-auth .auth-password-toggle:focus-visible { outline-offset: -3px; }
+.regie-auth .auth-password-toggle:hover { color: var(--color-muted-ink); }
+.regie-auth-error {
+  padding: 11px;
+  color: var(--color-danger-ink);
+  background: color-mix(in srgb, var(--color-danger) 7%, var(--color-surface));
+  border: 1px solid color-mix(in srgb, var(--color-danger) 23%, var(--color-surface));
+  border-radius: 8px;
+  font-size: .875rem;
+}
+@media (min-width: 60rem) {
+  .regie-auth { grid-template-columns: minmax(0, 45fr) minmax(0, 55fr); grid-template-rows: 1fr; }
+  .regie-auth-brand { grid-template-rows: auto minmax(0, 1fr); padding: clamp(26px, 4.4vw, 72px); }
+  .regie-auth-wordmark { align-content: start; }
+  .regie-auth-brand-message { display: grid; align-self: center; gap: 14px; padding-block: 45px 85px; }
+  .regie-auth-brand-message p:first-child {
+    font-size: clamp(2.4rem, 4.9vw, 4.9rem);
+    text-wrap: balance;
+    line-height: .98;
+    font-weight: 700;
+    letter-spacing: -.065em;
+  }
+  .regie-auth-brand-message p:last-child { color: var(--color-brand); font-size: clamp(1rem, 1.5vw, 1.3rem); font-weight: 500; }
+  .regie-auth-shape { width: clamp(120px, 15vw, 250px); height: clamp(108px, 17vw, 270px); bottom: -55px; gap: 12px; }
+  .regie-auth-nav { padding-inline: clamp(22px, 4vw, 60px); }
+  .regie-auth-content { align-content: center; padding: 52px clamp(28px, 6vw, 94px) 76px; }
+}

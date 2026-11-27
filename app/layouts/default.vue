@@ -14,7 +14,7 @@ const { t } = useI18n()
     <main id="storefront-content" class="storefront-anchor grow" tabindex="-1">
       <slot />
     </main>
-    <StorefrontFooter />
+    <slot name="footer"><StorefrontFooter /></slot>
     <slot name="mobile-bottom"><StorefrontBottomNavigation :cart-count="cart.quantity" /></slot>
   </div>
 </template>

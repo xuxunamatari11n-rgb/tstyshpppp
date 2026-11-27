@@ -3,6 +3,7 @@ import '~/assets/css/customer.css'
 
 const { t } = useI18n()
 const route = useRoute()
+const destination = useStorefrontDestination()
 const { current, currentItem, addressForm, path } = useCustomerNavigation()
 const { user, loadProfile, signingOut, logoutError, signIn } = useCustomerAccount()
 const overview = computed(() => current.value === 'account')
@@ -36,6 +37,19 @@ watch([user, signingOut], () => {
       </div>
     </template>
     <template v-if="!overview" #mobile-bottom><span hidden /></template>
+    <template #footer>
+      <StorefrontFooter class="hidden lg:block" />
+      <footer v-if="user" class="customer-compact-footer lg:hidden">
+        <UiContainer>
+          <nav :aria-label="t('storefront.footer.legal')">
+            <NuxtLink v-if="destination('legal')" :to="destination('legal')">{{ t('storefront.nav.legal') }}</NuxtLink>
+            <NuxtLink v-if="destination('privacy')" :to="destination('privacy')">{{ t('storefront.nav.privacy') }}</NuxtLink>
+            <NuxtLink :to="path('account-assistance')">{{ t('customer.nav.assistance') }}</NuxtLink>
+          </nav>
+          <SharedLanguageSwitcher compact />
+        </UiContainer>
+      </footer>
+    </template>
     <UiContainer v-if="user" class="customer-layout" :data-overview="overview">
       <nav class="product-breadcrumb" :aria-label="t('catalogue.breadcrumb')">
         <ol>

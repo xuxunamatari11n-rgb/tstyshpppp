@@ -3,7 +3,7 @@ import type { ShopSession } from '~/types/shop'
 import type { AddressForm, AddressSaveResult, CustomerAddress, CustomerProfile } from '~/types/customer'
 import { customerReturnQuery } from '~~/shared/utils/customerAccount'
 
-export function useCustomerAccount() {
+export function useCustomerAccount(options: { logoutDestination?: string } = {}) {
   const state = useCustomerSession()
   const { user, profile, addresses, profileStatus, addressStatus, revision, setUser } = state
   const localePath = useLocalePath()
@@ -92,7 +92,7 @@ export function useCustomerAccount() {
       await withOwner(owner => $fetch('/api/auth/action', { method: 'POST', body: { action: 'logout', locale: locale.value, owner } }))
       expire()
       try { localStorage.setItem('testy-shop/auth-changed', String(Date.now())) } catch { /* Current tab is cleared. */ }
-      await navigateTo(localePath({ name: 'index' }), { replace: true })
+      await navigateTo(localePath({ name: options.logoutDestination ?? 'index' }), { replace: true })
     } catch {
       logoutError.value = !!user.value
     } finally { signingOut.value = false }

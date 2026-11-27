@@ -15,7 +15,7 @@ const initials = computed(() => displayName.value.trim().split(/\s+/).slice(0, 2
       <strong>{{ displayName }}</strong>
     </div>
     <nav :aria-label="t('customer.navigation')">
-      <ul v-for="group in navigation.filter(group => !mobile || group[0].name !== 'account')" :key="group[0].name" class="customer-nav-group">
+      <ul v-for="group in navigation.filter(group => !mobile || (group[0].name !== 'account' && group[0].name !== 'favorites'))" :key="group[0].name" class="customer-nav-group">
         <li v-for="item in group" :key="item.name">
           <NuxtLink :to="path(item.name)" :data-active="currentGroup === item.name"
             :aria-current="current === item.name ? 'page' : currentGroup === item.name ? 'location' : undefined">
