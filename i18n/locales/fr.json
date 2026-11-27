@@ -94,6 +94,86 @@
     "adminReady": "Accès administrateur vérifié.",
     "invalidLink": "Ce lien a expiré ou est invalide.",
     "confirmed": "Adresse e-mail confirmée.",
+    "access": {
+      "backToStore": "Retour à la boutique",
+      "campaignTitle": "Ton prochain coup de cœur est ici.",
+      "campaignShort": "Ton prochain coup de cœur.",
+      "campaignSupport": "Explore. Enregistre. Fais-toi plaisir.",
+      "forgot": "Mot de passe oublié ?",
+      "noAccount": "Tu n’as pas encore de compte ?",
+      "haveAccount": "Tu as déjà un compte ?",
+      "backToLogin": "Revenir à la connexion",
+      "openAccount": "Accéder à mon compte",
+      "sendLink": "Envoyer le lien",
+      "updatePassword": "Mettre à jour le mot de passe",
+      "requestAnotherLink": "Demander un nouveau lien",
+      "newPassword": "Nouveau mot de passe",
+      "confirmPassword": "Confirmer le mot de passe",
+      "passwordHint": "Au moins 8 caractères.",
+      "enterPassword": "Saisis ton mot de passe.",
+      "passwordMismatch": "Les mots de passe doivent être identiques.",
+      "showPassword": "Afficher le champ « {field} »",
+      "hidePassword": "Masquer le champ « {field} »",
+      "pendingAction": "En cours…",
+      "checkFields": "Vérifie les champs indiqués.",
+      "accountBenefits": "Les avantages du compte",
+      "greeting": "Bienvenue, {name}.",
+      "benefits": {
+        "favorites": "Produits favoris",
+        "addresses": "Adresses de livraison",
+        "support": "Aide à la commande"
+      },
+      "states": {
+        "login": {
+          "title": "Bon retour parmi nous.",
+          "description": "Retrouve tes favoris et tes essentiels."
+        },
+        "signup": {
+          "title": "Ton shopping commence ici.",
+          "description": "Crée ton compte et retrouve toutes tes envies au même endroit."
+        },
+        "reset": {
+          "title": "Ça arrive à tout le monde.",
+          "description": "Renseigne ton adresse e-mail pour réinitialiser ton mot de passe."
+        },
+        "recover": {
+          "title": "Un nouveau départ.",
+          "description": "Choisis et confirme ton nouveau mot de passe."
+        },
+        "signupSent": {
+          "title": "Encore une petite étape.",
+          "description": "Si l’adresse peut être utilisée, tu recevras un e-mail. Ouvre le lien qu’il contient pour confirmer ton adresse."
+        },
+        "resetSent": {
+          "title": "Vérifie ta boîte e-mail.",
+          "description": "Si un compte correspond à cette adresse, tu recevras un lien pour choisir un nouveau mot de passe."
+        },
+        "confirmed": {
+          "title": "Ton adresse est confirmée.",
+          "description": "Tu peux maintenant accéder à ton compte Testy Shop."
+        },
+        "updated": {
+          "title": "Mot de passe mis à jour.",
+          "description": "Utilise ton nouveau mot de passe lors de ta prochaine connexion."
+        },
+        "expired": {
+          "title": "Ce lien n’est plus valide.",
+          "description": "Si ton lien a expiré ou ne fonctionne plus, demande un nouveau lien de réinitialisation."
+        },
+        "pending": {
+          "title": "Mon compte",
+          "description": "Vérification de ta session…"
+        },
+        "unavailable": {
+          "title": "Réessaie dans un instant.",
+          "description": "On ne peut pas vérifier ta session pour le moment."
+        },
+        "signedIn": {
+          "title": "Mon compte",
+          "description": "Retrouve ton compte Testy Shop."
+        }
+      }
+    },
     "notices": {
       "signup": "Si l’adresse est admissible, vous recevrez un lien de confirmation.",
       "reset": "Si un compte correspond à cette adresse, vous recevrez un lien de réinitialisation.",

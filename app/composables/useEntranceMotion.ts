@@ -1,6 +1,6 @@
 import type { Ref } from 'vue'
 
-export function useEntranceMotion(target: Readonly<Ref<HTMLElement | null>>) {
+export function useEntranceMotion(target: Readonly<Ref<HTMLElement | null>>, { duration = 0.5, opacity = 0 } = {}) {
   const { $gsap } = useNuxtApp()
   let preference: MediaQueryList | undefined
   let tween: ReturnType<typeof $gsap.from> | undefined
@@ -25,7 +25,7 @@ export function useEntranceMotion(target: Readonly<Ref<HTMLElement | null>>) {
     const element = target.value
     if (!preference || preference.matches || !element) return
     stop()
-    tween = $gsap.from(element, { y: 10, opacity: 0, duration: 0.5, ease: 'power3.out' })
+    tween = $gsap.from(element, { y: 10, opacity, duration, ease: 'power3.out', clearProps: 'transform,opacity' })
   }
 
   return { play }

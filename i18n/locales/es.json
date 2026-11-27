@@ -94,6 +94,86 @@
     "adminReady": "Acceso administrativo verificado.",
     "invalidLink": "Este enlace ha caducado o no es válido.",
     "confirmed": "Correo electrónico confirmado.",
+    "access": {
+      "backToStore": "Volver a la tienda",
+      "campaignTitle": "Tu próximo favorito está aquí.",
+      "campaignShort": "Tu próximo favorito.",
+      "campaignSupport": "Explora. Guarda. Date un gusto.",
+      "forgot": "¿Olvidaste tu contraseña?",
+      "noAccount": "¿Aún no tienes cuenta?",
+      "haveAccount": "¿Ya tienes una cuenta?",
+      "backToLogin": "Volver al inicio de sesión",
+      "openAccount": "Ir a mi cuenta",
+      "sendLink": "Enviar enlace",
+      "updatePassword": "Actualizar la contraseña",
+      "requestAnotherLink": "Solicitar otro enlace",
+      "newPassword": "Contraseña nueva",
+      "confirmPassword": "Confirmar la contraseña",
+      "passwordHint": "Al menos 8 caracteres.",
+      "enterPassword": "Introduce tu contraseña.",
+      "passwordMismatch": "Las contraseñas deben coincidir.",
+      "showPassword": "Mostrar el campo «{field}»",
+      "hidePassword": "Ocultar el campo «{field}»",
+      "pendingAction": "En curso…",
+      "checkFields": "Revisa los campos indicados.",
+      "accountBenefits": "Ventajas de la cuenta",
+      "greeting": "Hola, {name}.",
+      "benefits": {
+        "favorites": "Productos favoritos",
+        "addresses": "Direcciones de entrega",
+        "support": "Ayuda con los pedidos"
+      },
+      "states": {
+        "login": {
+          "title": "Qué bueno verte de nuevo.",
+          "description": "Vuelve a tus favoritos y a tus imprescindibles."
+        },
+        "signup": {
+          "title": "Tus compras empiezan aquí.",
+          "description": "Crea tu cuenta y reúne todo lo que te gusta en un solo lugar."
+        },
+        "reset": {
+          "title": "A cualquiera le pasa.",
+          "description": "Introduce tu correo electrónico para restablecer tu contraseña."
+        },
+        "recover": {
+          "title": "Un nuevo comienzo.",
+          "description": "Elige y confirma tu nueva contraseña."
+        },
+        "signupSent": {
+          "title": "Solo queda un paso.",
+          "description": "Si se puede usar esa dirección, recibirás un correo. Abre el enlace del mensaje para confirmar tu dirección."
+        },
+        "resetSent": {
+          "title": "Revisa tu correo.",
+          "description": "Si existe una cuenta con esa dirección, recibirás un enlace para elegir una contraseña nueva."
+        },
+        "confirmed": {
+          "title": "Tu correo está confirmado.",
+          "description": "Ya puedes acceder a tu cuenta de Testy Shop."
+        },
+        "updated": {
+          "title": "Contraseña actualizada.",
+          "description": "Usa tu nueva contraseña la próxima vez que inicies sesión."
+        },
+        "expired": {
+          "title": "Este enlace ya no es válido.",
+          "description": "Si el enlace ha caducado o ya no funciona, solicita otro enlace para restablecer la contraseña."
+        },
+        "pending": {
+          "title": "Mi cuenta",
+          "description": "Comprobando tu sesión…"
+        },
+        "unavailable": {
+          "title": "Vuelve a intentarlo en un momento.",
+          "description": "Ahora mismo no podemos comprobar tu sesión."
+        },
+        "signedIn": {
+          "title": "Mi cuenta",
+          "description": "Accede a tu cuenta de Testy Shop."
+        }
+      }
+    },
     "notices": {
       "signup": "Si la dirección cumple los requisitos, recibirás un enlace de confirmación.",
       "reset": "Si existe una cuenta con esa dirección, recibirás un enlace para restablecer la contraseña.",

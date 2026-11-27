@@ -1,92 +1,133 @@
 <script setup lang="ts">
-definePageMeta({ name: 'account', i18n: { paths: { fr: '/compte', es: '/cuenta' } } })
-const { t, locale } = useI18n()
-const route = useRoute()
+definePageMeta({ name: 'account', layout: 'auth', i18n: { paths: { fr: '/compte', es: '/cuenta' } } })
+
+const { t } = useI18n()
 const localePath = useLocalePath()
-const { data, status, error, refresh } = await useShopSession()
-const user = computed(() => data.value?.user)
-const mode = computed(() => route.query.intent === 'create-account' ? 'signup'
-  : route.query.intent === 'reset' ? 'reset' : route.query.intent === 'recovery' ? 'recover' : 'login')
-const working = ref(false)
-const failure = ref('')
-const notice = ref('')
-const email = ref('')
-const password = ref('')
-const firstName = ref('')
-const lastName = ref('')
+const panel = useTemplateRef('panel')
+const title = useTemplateRef('title')
+const form = useTemplateRef('form')
+const { play } = useEntranceMotion(panel, { duration: 0.28, opacity: 0.86 })
+const { user, mode, working, failure, notice, fieldErrors, email, password, confirmation, firstName, lastName,
+  view, session, refresh, accountLink, clearField, submit } = useAuthFlow(form)
+await session
+
+const isForm = computed(() => view.value === 'login' || view.value === 'signup' || view.value === 'reset' || view.value === 'recover')
+const compact = computed(() => view.value !== 'login' && view.value !== 'signup')
+const stateIcons = {
+  signupSent: 'ion:mail-outline',
+  resetSent: 'ion:mail-outline',
+  confirmed: 'ion:checkmark-outline',
+  updated: 'ion:checkmark-outline',
+  expired: 'ion:time-outline',
+  unavailable: 'ion:alert-circle-outline',
+  signedIn: 'ion:person-outline',
+}
+const stateIcon = computed(() => stateIcons[view.value as keyof typeof stateIcons])
+const signupBenefits = [
+  { key: 'favorites', icon: 'ion:heart-outline' },
+  { key: 'addresses', icon: 'ion:location-outline' },
+  { key: 'support', icon: 'ion:headset-outline' },
+]
+const actionLabels = {
+  login: 'auth.login',
+  signup: 'auth.signup',
+  reset: 'auth.access.sendLink',
+  recover: 'auth.access.updatePassword',
+}
+
 useSeoMeta({ title: () => t('auth.account'), robots: 'noindex, nofollow' })
 
-function accountLink(intent?: string) {
-  return localePath({ name: 'account', query: { intent } })
-}
-
-watch(mode, () => { password.value = ''; failure.value = ''; notice.value = '' })
-async function submit(action: 'login' | 'signup' | 'reset' | 'recover' | 'logout') {
-  if (working.value) return
-  working.value = true
-  failure.value = ''
-  notice.value = ''
-  try {
-    await $fetch('/api/auth/action', {
-      method: 'POST', body: { action, locale: locale.value, email: email.value, password: password.value,
-        firstName: firstName.value, lastName: lastName.value },
-    })
-    password.value = ''
-    if (action === 'signup' || action === 'reset') {
-      notice.value = action
-      await refresh()
-    } else {
-      await refresh()
-      await navigateTo(accountLink(), { replace: true })
-      if (action === 'recover') notice.value = 'updated'
-    }
-  } catch (caught) {
-    const reason = (caught as { data?: { data?: { code?: string } } }).data?.data?.code
-    failure.value = reason && ['email','password','rate','unconfirmed','credentials','invalid'].includes(reason) ? reason : 'unavailable'
-  } finally {
-    working.value = false
-  }
-}
+watch(view, () => {
+  title.value?.focus()
+  play()
+}, { flush: 'post' })
 </script>
 
 <template>
-  <UiContainer class="py-8 lg:py-12">
-    <section class="mx-auto grid max-w-md gap-5" aria-labelledby="shop-auth-title">
-      <h1 id="shop-auth-title" class="text-section font-semibold">{{ t('auth.account') }}</h1>
-      <p v-if="route.query.auth === 'invalid'" role="alert">{{ t('auth.invalidLink') }}</p>
-      <p v-if="route.query.auth === 'confirmed'" role="status">{{ t('auth.confirmed') }}</p>
-      <p v-if="notice" role="status" class="text-success-ink">{{ t(`auth.notices.${notice}`) }}</p>
-      <p v-if="failure" role="alert" class="text-danger-ink">{{ t(`auth.errors.${failure}`) }}</p>
+  <section :key="view" ref="panel" class="auth-panel" :data-auth-compact="compact || undefined" aria-labelledby="shop-auth-title">
+    <div
+      v-if="stateIcon" class="auth-status-icon"
+      :data-tone="view === 'confirmed' || view === 'updated' ? 'success' : view === 'expired' || view === 'unavailable' ? 'neutral' : undefined"
+    >
+      <Icon :name="stateIcon" size="27" aria-hidden="true" />
+    </div>
+    <div class="auth-intro">
+      <h1 id="shop-auth-title" ref="title" tabindex="-1">{{ t(`auth.access.states.${view}.title`) }}</h1>
+      <p v-if="view === 'signedIn' && user">{{ t('auth.access.greeting', { name: user.firstName || user.email }) }}</p>
+      <p v-else>{{ t(`auth.access.states.${view}.description`) }}</p>
+    </div>
 
-      <UiSkeleton v-if="status === 'pending'" class="w-full" />
-      <UiEmptyState v-else-if="error" :title="t('auth.errors.unavailable')" as="h2">
-        <template #action><UiButton variant="outline" @click="refresh()">{{ t('catalogue.retry') }}</UiButton></template>
-      </UiEmptyState>
-      <div v-else-if="user && mode !== 'recover'" class="grid gap-3">
-        <p>{{ user.firstName || user.email }}</p>
-        <NuxtLink v-if="user.role === 'admin'" :to="localePath({ name: 'shop-admin' })" class="ui-button w-fit" data-variant="outline">{{ t('auth.admin') }}</NuxtLink>
-        <UiButton class="w-fit" variant="outline" :loading="working" @click="submit('logout')">{{ t('auth.logout') }}</UiButton>
+    <p v-if="failure" class="auth-feedback" role="alert">
+      <Icon name="ion:alert-circle-outline" size="21" aria-hidden="true" />
+      {{ t(`auth.errors.${failure}`) }}
+    </p>
+
+    <UiSkeleton v-if="view === 'pending'" class="w-full" />
+    <UiButton v-else-if="view === 'unavailable'" class="auth-primary" @click="refresh()">{{ t('catalogue.retry') }}</UiButton>
+
+    <form v-else-if="isForm" ref="form" class="auth-form" novalidate @submit.prevent="submit(mode)">
+      <p v-if="Object.keys(fieldErrors).length" class="sr-only" role="alert">{{ t('auth.access.checkFields') }}</p>
+      <div v-if="mode === 'signup'" class="auth-name-fields">
+        <UiInput v-model="firstName" :label="t('auth.firstName')" name="firstName" maxlength="80" autocomplete="given-name" :disabled="working" />
+        <UiInput v-model="lastName" :label="t('auth.lastName')" name="lastName" maxlength="80" autocomplete="family-name" :disabled="working" />
       </div>
-      <div v-else-if="mode === 'recover' && !user" class="grid gap-3">
-        <p>{{ t('auth.invalidLink') }}</p>
-        <NuxtLink :to="accountLink('reset')" class="ui-button w-fit" data-variant="outline">{{ t('auth.reset') }}</NuxtLink>
-      </div>
-      <form v-else class="grid gap-4" @submit.prevent="submit(mode)">
-        <h2 class="text-lg font-semibold">{{ t(`auth.${mode}`) }}</h2>
-        <div v-if="mode === 'signup'" class="grid grid-cols-2 gap-2">
-          <UiInput v-model="firstName" :label="t('auth.firstName')" maxlength="80" autocomplete="given-name" />
-          <UiInput v-model="lastName" :label="t('auth.lastName')" maxlength="80" autocomplete="family-name" />
-        </div>
-        <UiInput v-if="mode !== 'recover'" v-model="email" :label="t('auth.email')" type="email" autocomplete="email" required maxlength="254" />
-        <UiInput v-if="mode !== 'reset'" v-model="password" :label="t('auth.password')" type="password" required maxlength="128"
-          :minlength="mode === 'login' ? undefined : 8" :autocomplete="mode === 'login' ? 'current-password' : 'new-password'" />
-        <UiButton type="submit" :loading="working" :disabled="working">{{ t(`auth.${mode}`) }}</UiButton>
-        <div v-if="mode !== 'recover'" class="flex flex-wrap gap-3 text-sm underline underline-offset-4">
-          <NuxtLink v-if="mode !== 'login'" :to="accountLink()">{{ t('auth.login') }}</NuxtLink>
-          <NuxtLink v-if="mode !== 'signup'" :to="accountLink('create-account')">{{ t('auth.signup') }}</NuxtLink>
-          <NuxtLink v-if="mode !== 'reset'" :to="accountLink('reset')">{{ t('auth.reset') }}</NuxtLink>
-        </div>
-      </form>
-    </section>
-  </UiContainer>
+      <UiInput
+        v-if="mode !== 'recover'" v-model="email" :label="t('auth.email')" name="email" type="email" autocomplete="email"
+        inputmode="email" autocapitalize="none" spellcheck="false" maxlength="254" required :disabled="working"
+        :error="fieldErrors.email && t(fieldErrors.email)" @update:model-value="clearField('email')"
+      />
+      <AuthPasswordField
+        v-if="mode !== 'reset'" v-model="password" name="password"
+        :label="t(mode === 'recover' ? 'auth.access.newPassword' : 'auth.password')"
+        :autocomplete="mode === 'login' ? 'current-password' : 'new-password'"
+        :minlength="mode === 'login' ? undefined : 8"
+        :hint="mode === 'login' ? undefined : t('auth.access.passwordHint')" :disabled="working"
+        :error="fieldErrors.password && t(fieldErrors.password)" @update:model-value="clearField('password')"
+      />
+      <AuthPasswordField
+        v-if="mode === 'recover'" v-model="confirmation" name="confirmation" :label="t('auth.access.confirmPassword')"
+        autocomplete="new-password" :disabled="working"
+        :error="fieldErrors.confirmation && t(fieldErrors.confirmation)" @update:model-value="clearField('confirmation')"
+      />
+      <NuxtLink v-if="mode === 'login'" :to="accountLink('reset')" class="auth-text-link auth-forgot">
+        {{ t('auth.access.forgot') }}
+      </NuxtLink>
+      <UiButton class="auth-primary" type="submit" :loading="working" :disabled="working">
+        {{ t(working ? 'auth.access.pendingAction' : actionLabels[mode]) }}
+      </UiButton>
+    </form>
+
+    <div v-if="view === 'login' || view === 'signup'" class="auth-switch">
+      <p>
+        {{ t(view === 'login' ? 'auth.access.noAccount' : 'auth.access.haveAccount') }}
+        <NuxtLink :to="view === 'login' ? accountLink('create-account') : accountLink()" class="auth-text-link">
+          {{ t(view === 'login' ? 'auth.signup' : 'auth.login') }}
+        </NuxtLink>
+      </p>
+    </div>
+    <ul v-if="view === 'signup'" class="auth-benefits" :aria-label="t('auth.access.accountBenefits')">
+      <li v-for="benefit in signupBenefits" :key="benefit.key">
+        <Icon :name="benefit.icon" size="17" aria-hidden="true" />
+        {{ t(`auth.access.benefits.${benefit.key}`) }}
+      </li>
+    </ul>
+    <div v-if="view === 'reset'" class="auth-switch">
+      <NuxtLink :to="accountLink()" class="auth-text-link">{{ t('auth.access.backToLogin') }}</NuxtLink>
+    </div>
+
+    <div v-if="view === 'signupSent' || view === 'resetSent' || view === 'confirmed' || view === 'updated' || view === 'expired'" class="auth-state-actions">
+      <NuxtLink
+        :to="view === 'expired' ? accountLink('reset') : accountLink()"
+        class="ui-button auth-primary" data-variant="primary"
+        @click="notice = undefined"
+      >
+        {{ t(view === 'expired' ? 'auth.access.requestAnotherLink' : user ? 'auth.access.openAccount' : 'auth.access.backToLogin') }}
+      </NuxtLink>
+      <NuxtLink v-if="view === 'expired'" :to="accountLink()" class="auth-text-link">{{ t('auth.access.backToLogin') }}</NuxtLink>
+    </div>
+    <div v-if="view === 'signedIn'" class="auth-state-actions">
+      <NuxtLink v-if="user?.role === 'admin'" :to="localePath({ name: 'shop-admin' })" class="auth-text-link">{{ t('auth.admin') }}</NuxtLink>
+      <UiButton variant="outline" :loading="working" :disabled="working" @click="submit('logout')">{{ t('auth.logout') }}</UiButton>
+    </div>
+  </section>
 </template>

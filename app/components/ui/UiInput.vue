@@ -16,19 +16,22 @@ function updateValue(event: Event) {
 <template>
   <div class="ui-field">
     <label :for="controlId">{{ label }}</label>
-    <input
-      v-bind="$attrs"
-      :id="controlId"
-      class="ui-control"
-      :type="type ?? 'text'"
-      :value="model"
-      :name="name"
-      :disabled="disabled"
-      :required="required"
-      :aria-invalid="error ? 'true' : undefined"
-      :aria-describedby="[describedBy, $attrs['aria-describedby']].filter(Boolean).join(' ') || undefined"
-      @input="updateValue"
-    >
+    <div :class="$slots.trailing ? 'relative' : 'contents'">
+      <input
+        v-bind="$attrs"
+        :id="controlId"
+        class="ui-control"
+        :type="type ?? 'text'"
+        :value="model"
+        :name="name"
+        :disabled="disabled"
+        :required="required"
+        :aria-invalid="error ? 'true' : undefined"
+        :aria-describedby="[describedBy, $attrs['aria-describedby']].filter(Boolean).join(' ') || undefined"
+        @input="updateValue"
+      >
+      <slot name="trailing" />
+    </div>
     <p v-if="hint" :id="hintId" class="ui-hint">{{ hint }}</p>
     <p v-if="error" :id="errorId" class="ui-error">{{ error }}</p>
   </div>
