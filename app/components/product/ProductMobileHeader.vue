@@ -1,6 +1,6 @@
 <script setup lang="ts">
 defineProps<{ favorite: boolean }>()
-const emit = defineEmits<{ favorite: []; share: [] }>()
+const emit = defineEmits<{ favorite: [event: MouseEvent]; share: [] }>()
 const { t } = useI18n()
 const router = useRouter()
 const localePath = useLocalePath()
@@ -29,8 +29,8 @@ function goBack(event: MouseEvent) {
     </NuxtLink>
     <span class="product-mobile-header-title">{{ t('product.details') }}</span>
     <div class="flex items-center">
-      <UiIconButton variant="ghost" :icon="favorite ? 'ion:heart' : 'ion:heart-outline'" :aria-pressed="favorite"
-        :label="t('product.favorite')" @click="emit('favorite')" />
+      <UiIconButton class="product-mobile-favorite" variant="ghost" :icon="favorite ? 'ion:heart' : 'ion:heart-outline'" :aria-pressed="favorite"
+        :label="t('product.favorite')" @click="emit('favorite', $event)" />
       <UiIconButton variant="ghost" icon="ion:share-social-outline" :label="t('product.share')" @click="emit('share')" />
     </div>
   </UiContainer>

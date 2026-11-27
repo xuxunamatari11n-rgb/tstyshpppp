@@ -13,4 +13,5 @@ await provideShopMeta()
   <NuxtLayout>
     <NuxtPage />
   </NuxtLayout>
+  <CommerceRuntime />
 </template>

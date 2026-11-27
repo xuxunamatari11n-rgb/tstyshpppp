@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import type { CartLineRequest } from '~/types/commerce'
-import { findProductBySlug, productAvailability, productImages, productQuantityLimit, productSavings } from '~/utils/product'
+import { findProductBySlug, productAvailability, productImages, productSavings } from '~/utils/product'
+
+import { cartQuantityLimit } from '~/utils/cart'
 
 definePageMeta({
   name: 'product',
@@ -39,7 +41,7 @@ const formatPrice = useShopPrice()
 const savings = computed(() => product.value ? productSavings(product.value) : 0)
 const discount = computed(() => savings.value && product.value?.previousPrice
   ? Math.round(savings.value / product.value.previousPrice * 100) : 0)
-const max = computed(() => product.value ? productQuantityLimit(product.value) : 1)
+const max = computed(() => product.value ? cartQuantityLimit(product.value) : 1)
 const quantity = ref(1)
 watch(max, limit => { quantity.value = Math.min(quantity.value, limit) })
 const total = computed(() => (product.value?.price ?? 0) * quantity.value)
@@ -51,15 +53,6 @@ function productUrl(language = locale.value) {
   const path = localePath({ name: 'product', params: { slug: product.value.slug } }, language)
   return new URL(path, requestUrl).href
 }
-const whatsappOrder = computed(() => {
-  if (!whatsappContact.value || !product.value || !purchasable.value) return
-  const link = new URL(whatsappContact.value)
-  link.searchParams.set('text', t('product.whatsappMessage', {
-    product: title.value, quantity: quantity.value, unit: formatPrice(product.value.price),
-    total: formatPrice(total.value), url: productUrl(),
-  }))
-  return link.href
-})
 
 if (import.meta.server) {
   const event = useRequestEvent()
@@ -116,8 +109,8 @@ async function share() {
   shareField.value?.select()
 }
 
-function toggle() {
-  if (product.value) toggleFavorite(product.value.id)
+function toggle(event?: MouseEvent) {
+  if (product.value) toggleFavorite(product.value.id, event)
 }
 </script>
 
@@ -126,14 +119,14 @@ function toggle() {
     <template v-if="product" #mobile-header>
       <ProductMobileHeader :favorite="favorite" @favorite="toggle" @share="share" />
     </template>
-    <template v-if="line" #mobile-bottom>
+    <template v-if="product && line" #mobile-bottom>
       <aside class="product-mobile-bar lg:hidden" :aria-label="t('product.purchase')">
         <UiContainer class="product-mobile-bar-inner">
           <div class="product-mobile-total">
             <span>{{ t('product.total') }}</span>
             <output aria-live="polite"><UiNumericText :value="formatPrice(total)" /></output>
           </div>
-          <ProductPurchaseActions :line="line" :available="purchasable" :closed="shopClosed" :whatsapp-url="whatsappOrder" compact />
+          <ProductPurchaseActions :line="line" :product="product" :available="purchasable" :closed="shopClosed" compact />
         </UiContainer>
       </aside>
     </template>
@@ -182,14 +175,14 @@ function toggle() {
             </div>
 
             <div class="hidden lg:block">
-              <ProductPurchaseActions :line="line" :available="purchasable" :closed="shopClosed" :whatsapp-url="whatsappOrder" />
+              <ProductPurchaseActions :line="line" :product="product" :available="purchasable" :closed="shopClosed" />
             </div>
             <p v-if="available" class="product-purchase-note">
-              {{ t(shopClosed ? 'product.shopClosed' : whatsappOrder ? 'product.whatsappHint' : 'storefront.footer.whatsappPending') }}
+              {{ t(shopClosed ? 'product.shopClosed' : whatsappContact ? 'product.whatsappHint' : 'storefront.footer.whatsappPending') }}
             </p>
 
             <div class="product-secondary-actions hidden lg:flex">
-              <UiButton variant="ghost" :aria-pressed="favorite" @click="toggle">
+              <UiButton class="product-favorite" variant="ghost" :aria-pressed="favorite" @click="toggle">
                 <Icon :name="favorite ? 'ion:heart' : 'ion:heart-outline'" size="20" aria-hidden="true" />{{ t('product.favorite') }}
               </UiButton>
               <UiButton variant="ghost" @click="share">

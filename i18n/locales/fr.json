@@ -79,6 +79,81 @@
       "category": "Accessoires tech"
     }
   },
+  "commerce": {
+    "close": "Fermer",
+    "remove": "Retirer {product}",
+    "explore": "Explorer la boutique",
+    "cart": {
+      "title": "Mon panier",
+      "count": "Aucun article | {count} article | {count} articles",
+      "quantityValue": "Quantité · {count}",
+      "products": "Articles du panier",
+      "subtotal": "Sous-total des articles",
+      "total": "Total estimé",
+      "summary": "Récapitulatif",
+      "continue": "Continuer mes achats",
+      "view": "Voir le panier",
+      "clear": "Vider le panier",
+      "emptyTitle": "Ton panier attend ses premières trouvailles.",
+      "emptyText": "Ajoute un article qui te plaît et retrouve-le ici."
+    },
+    "favorites": {
+      "title": "Mes favoris",
+      "count": "Aucun favori | {count} favori | {count} favoris",
+      "invitation": "Connecte-toi pour retrouver tes favoris sur tes autres appareils.",
+      "emptyTitle": "Garde tes coups de cœur à portée de main.",
+      "emptyText": "Touche le cœur d’un produit pour le retrouver ici.",
+      "remove": "Retirer des favoris",
+      "loading": "Chargement de tes favoris…",
+      "loadError": "Impossible d’afficher les produits favoris.",
+      "syncError": "Certains favoris sont encore sur cet appareil. Réessaie la synchronisation."
+    },
+    "feedback": {
+      "added": "Produit ajouté au panier.",
+      "stock": "Quantité maximale atteinte ou article indisponible.",
+      "cartFull": "Ton panier a atteint la limite d’articles distincts.",
+      "favoriteAdded": "Produit ajouté aux favoris.",
+      "favoriteRemoved": "Produit retiré des favoris.",
+      "favoriteError": "Impossible de modifier les favoris. Réessaie."
+    },
+    "validation": {
+      "checking": "Vérification du catalogue…",
+      "error": "Impossible de vérifier les articles pour le moment.",
+      "restored": "Certaines quantités enregistrées étaient invalides. Vérifie le panier.",
+      "missing": "Article retiré du catalogue ou masqué.",
+      "unavailable": "Cet article est indisponible.",
+      "stock": "Le stock a changé. Réduis la quantité ou retire cet article.",
+      "price": "Le prix de cet article a changé.",
+      "resolve": "Ajuste les quantités ou retire les articles indisponibles pour continuer."
+    },
+    "order": {
+      "title": "Préparer la commande",
+      "description": "Vérifie les articles et le message avant d’ouvrir WhatsApp.",
+      "whatsapp": "Commander sur WhatsApp",
+      "openWhatsApp": "Ouvrir WhatsApp",
+      "optional": "Informations facultatives",
+      "disclosure": "Les coordonnées et les détails de livraison que tu ajoutes seront inclus dans le message.",
+      "contact": "Nom et coordonnées",
+      "delivery": "Adresse ou indications de livraison",
+      "savedAddress": "Adresse enregistrée",
+      "noAddress": "Saisir mes informations",
+      "preview": "Aperçu du message",
+      "noContact": "La commande WhatsApp est momentanément indisponible. Consulte les options d’assistance.",
+      "assistance": "Accéder à l’assistance",
+      "changed": "La commande a changé. Vérifie le nouveau récapitulatif avant de continuer.",
+      "tooLong": "Le message est trop long. Réduis les détails ou prépare ta commande en plusieurs fois.",
+      "deliveryEstimate": "Les modalités de livraison seront confirmées avec la boutique."
+    },
+    "message": {
+      "greeting": "Bonjour {shop} !",
+      "intro": "Je souhaite commander les articles suivants :",
+      "line": "- {product} × {count} — {amount}",
+      "total": "Total estimé : {amount}",
+      "contact": "Coordonnées : {details}",
+      "delivery": "Livraison : {details}",
+      "confirm": "Pouvez-vous me confirmer leur disponibilité et les modalités de livraison ?"
+    }
+  },
   "auth": {
     "account": "Mon compte",
     "login": "Se connecter",

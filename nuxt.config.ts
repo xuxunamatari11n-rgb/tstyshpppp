@@ -1,10 +1,5 @@
 import tailwindcss from '@tailwindcss/vite'
 
-const storefrontPublicPaths = {
-  favorites: { fr: '/favoris', es: '/favoritos' },
-  cart: { fr: '/panier', es: '/carrito' },
-}
-
 const storefrontPreviewPaths = {
   legal: { fr: '/mentions-legales', es: '/aviso-legal' },
   privacy: { fr: '/confidentialite', es: '/privacidad' },
@@ -14,7 +9,7 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
   pages: true,
-  css: ['~/assets/css/main.css', '~/assets/css/storefront.css', '~/assets/css/home.css', '~/assets/css/catalogue.css', '~/assets/css/product.css'],
+  css: ['~/assets/css/main.css', '~/assets/css/storefront.css', '~/assets/css/home.css', '~/assets/css/catalogue.css', '~/assets/css/product.css', '~/assets/css/commerce.css'],
   app: {
     head: {
       viewport: 'width=device-width, initial-scale=1, viewport-fit=cover',
@@ -35,11 +30,9 @@ export default defineNuxtConfig({
         }
 
         const mockPages = `${nuxt.options.srcDir.replace(/[/\\]+$/, '')}/mocks/pages`
-        const storefrontPaths = nuxt.options.dev
-          ? { ...storefrontPublicPaths, ...storefrontPreviewPaths }
-          : storefrontPublicPaths
+        if (!nuxt.options.dev) return
 
-        for (const [name, paths] of Object.entries(storefrontPaths)) {
+        for (const [name, paths] of Object.entries(storefrontPreviewPaths)) {
           pages.push({
             name,
             path: paths.fr,

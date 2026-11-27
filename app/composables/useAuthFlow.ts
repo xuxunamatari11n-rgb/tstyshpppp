@@ -7,6 +7,7 @@ type AuthField = 'email' | 'password' | 'confirmation'
 
 export function useAuthFlow(form: Readonly<Ref<HTMLFormElement | null>>) {
   const { locale } = useI18n()
+  const { invalidate } = useShopIdentityControl()
   const route = useRoute()
   const localePath = useLocalePath()
   const session = useShopSession()
@@ -96,6 +97,10 @@ export function useAuthFlow(form: Readonly<Ref<HTMLFormElement | null>>) {
       })
       password.value = ''
       confirmation.value = ''
+      if (action === 'login' || action === 'logout') {
+        invalidate(action === 'logout' ? null : undefined)
+        try { localStorage.setItem('testy-shop/auth-changed', String(Date.now())) } catch { /* Current tab still refreshes. */ }
+      }
       if (action === 'signup' || action === 'reset') {
         if (mode.value === action) notice.value = action === 'signup' ? 'signupSent' : 'resetSent'
         await refresh()

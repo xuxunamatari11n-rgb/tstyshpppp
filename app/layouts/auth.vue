@@ -25,8 +25,8 @@ const legal = computed(() => destination('legal'))
     </main>
     <footer class="auth-footer">
       <small>{{ t('storefront.footer.copyright') }}</small>
-      <NuxtLink v-if="privacy" :to="privacy">{{ t('storefront.footer.privacy') }}</NuxtLink>
-      <NuxtLink v-if="legal" :to="legal">{{ t('storefront.footer.legal') }}</NuxtLink>
+      <NuxtLink v-if="privacy" :to="privacy">{{ t('storefront.nav.privacy') }}</NuxtLink>
+      <NuxtLink v-if="legal" :to="legal">{{ t('storefront.nav.legal') }}</NuxtLink>
     </footer>
   </div>
 </template>

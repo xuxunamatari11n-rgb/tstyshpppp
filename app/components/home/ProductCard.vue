@@ -9,14 +9,17 @@ const formatPrice = useShopPrice()
 const { categoryName } = useShopMeta()
 const localePath = useLocalePath()
 const { isFavorite, toggleFavorite } = useProductFavorites()
+const { addToCart } = useCommerce()
+const { settings } = useShopMeta()
 const photo = computed(() => productImages(props.product)[0])
 const available = computed(() => productAvailability(props.product))
+const purchasable = computed(() => available.value && settings.value?.open !== false)
 const discount = computed(() => {
   const savings = productSavings(props.product)
   return savings && props.product.previousPrice ? Math.round(savings / props.product.previousPrice * 100) : 0
 })
 const productLink = computed(() => localePath({ name: 'product', params: { slug: props.product.slug } }))
-const cartLabel = computed(() => t(available.value ? 'catalogue.purchasePending' : 'product.outOfStock'))
+const cartLabel = computed(() => t(purchasable.value ? 'product.addToCart' : available.value ? 'product.shopClosed' : 'product.outOfStock'))
 </script>
 
 <template>
@@ -35,7 +38,7 @@ const cartLabel = computed(() => t(available.value ? 'catalogue.purchasePending'
         :title="t('home.actions.favorite', { product: name(product) })"
         variant="ghost"
         class="home-product-favorite"
-        @click="toggleFavorite(product.id)"
+        @click="toggleFavorite(product.id, $event)"
       />
     </div>
     <p class="home-product-category">{{ categoryName(product.categoryId) }}</p>
@@ -49,7 +52,8 @@ const cartLabel = computed(() => t(available.value ? 'catalogue.purchasePending'
           <UiNumericText :value="formatPrice(product.previousPrice)" />
         </del>
       </p>
-      <UiIconButton icon="ion:cart-outline" :label="cartLabel" :title="cartLabel" disabled class="home-product-add commercial-cart" variant="primary" />
+      <UiIconButton icon="ion:cart-outline" :label="cartLabel" :title="cartLabel" :disabled="!purchasable"
+        class="home-product-add commercial-cart" variant="primary" @click="addToCart(product)" />
     </div>
   </article>
 </template>

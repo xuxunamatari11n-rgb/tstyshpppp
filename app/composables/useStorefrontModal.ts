@@ -1,15 +1,18 @@
 import type { Ref } from 'vue'
 
+let scrollLocks = 0
+let pageOverflow = ''
+let bodyOverflow = ''
+
 export function useStorefrontModal(
   dialog: Readonly<Ref<HTMLDialogElement | null>>,
   initialFocus: Readonly<Ref<HTMLElement | null>>,
-  options: { mobileOnly?: boolean } = {},
+  options: { mobileOnly?: boolean; desktopOnly?: boolean } = {},
 ) {
   const active = ref(false)
   const route = useRoute()
   let invoker: HTMLElement | null = null
-  let previousOverflow: string | undefined
-  let previousBodyOverflow: string | undefined
+  let scrollLocked = false
   let restoreFocus = true
   let desktop: MediaQueryList | undefined
 
@@ -22,22 +25,24 @@ export function useStorefrontModal(
     await nextTick()
     if (!active.value || !element.isConnected) return
     element.showModal()
-    previousOverflow = document.documentElement.style.overflow
-    previousBodyOverflow = document.body.style.overflow
-    document.documentElement.style.overflow = 'hidden'
-    document.body.style.overflow = 'hidden'
+    scrollLocked = true
+    if (scrollLocks++ === 0) {
+      pageOverflow = document.documentElement.style.overflow
+      bodyOverflow = document.body.style.overflow
+      document.documentElement.style.overflow = 'hidden'
+      document.body.style.overflow = 'hidden'
+    }
     initialFocus.value?.focus({ preventScroll: true })
   }
 
   function finishClose() {
     dialog.value?.close()
-    if (previousOverflow !== undefined) {
-      document.documentElement.style.overflow = previousOverflow
-      previousOverflow = undefined
-    }
-    if (previousBodyOverflow !== undefined) {
-      document.body.style.overflow = previousBodyOverflow
-      previousBodyOverflow = undefined
+    if (scrollLocked) {
+      scrollLocked = false
+      if (--scrollLocks === 0) {
+        document.documentElement.style.overflow = pageOverflow
+        document.body.style.overflow = bodyOverflow
+      }
     }
     if (restoreFocus && invoker?.isConnected && invoker.getClientRects().length) {
       invoker.focus({ preventScroll: true })
@@ -75,12 +80,12 @@ export function useStorefrontModal(
   }
 
   function breakpointChanged(event: MediaQueryListEvent) {
-    if (event.matches) close(false)
+    if (options.desktopOnly ? !event.matches : event.matches) close(false)
   }
 
   watch(() => route.fullPath, () => close(false))
   onMounted(() => {
-    if (options.mobileOnly === false) return
+    if (options.mobileOnly === false && !options.desktopOnly) return
     desktop = window.matchMedia('(min-width: 64rem)')
     desktop.addEventListener('change', breakpointChanged)
   })

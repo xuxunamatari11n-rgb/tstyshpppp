@@ -226,7 +226,7 @@
   font-size: 0.75rem;
 }
 .auth-footer small { font-size: inherit; }
-.auth-footer a { display: inline-flex; align-items: center; min-height: 2.75rem; }
+.auth-footer a { display: inline-flex; align-items: center; min-height: 2.75rem; min-width: 0; max-width: 100%; overflow-wrap: anywhere; }
 .auth-footer a:hover { text-decoration: underline; text-underline-offset: 0.2em; }
 
 @media (min-width: 25rem) {
