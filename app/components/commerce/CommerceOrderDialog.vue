@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import type { ShopRow } from '~~/shared/types/database'
-
-type SavedAddress = Pick<ShopRow<'addresses'>, 'id' | 'label' | 'recipient_name' | 'recipient_phone' | 'country' | 'city' | 'district' | 'street' | 'delivery_instructions'>
+import type { CustomerAddress } from '~/types/customer'
 
 const { t } = useI18n()
 const localePath = useLocalePath()
@@ -15,8 +13,10 @@ const closeButton = useTemplateRef('closeButton')
 const title = useId()
 const { active, open, close, finishClose, trapFocus } = useStorefrontModal(dialog, closeButton, { mobileOnly: false })
 const motion = useStorefrontTransition(26)
-const addresses = shallowRef<SavedAddress[]>([])
+const addresses = shallowRef<CustomerAddress[]>([])
 const addressChoice = ref('')
+const addressHint = ref('')
+const checkingAddress = ref(false)
 let addressRevision = 0
 let appliedContact = ''
 let appliedDelivery = ''
@@ -25,6 +25,8 @@ function clearAddress() {
   ++addressRevision
   addresses.value = []
   addressChoice.value = ''
+  addressHint.value = ''
+  checkingAddress.value = false
   if (contact.value === appliedContact) contact.value = ''
   if (delivery.value === appliedDelivery) delivery.value = ''
   appliedContact = ''
@@ -36,21 +38,76 @@ async function loadAddresses() {
   if (!owner) return
   const current = ++addressRevision
   try {
-    const rows = await $fetch<SavedAddress[]>('/api/account/addresses', { query: { owner } })
+    const rows = await $fetch<CustomerAddress[]>('/api/account/addresses', { query: { owner } })
     if (active.value && current === addressRevision && owner === identity.value?.id) addresses.value = rows
   } catch { /* Manual details remain available. */ }
 }
 
-function applyAddress(event: Event) {
+function addressDetails(address?: CustomerAddress) {
+  if (!address) return { contact: '', delivery: '' }
+  return {
+    contact: [address.recipient_name, address.recipient_phone].filter(Boolean).join(' · '),
+    delivery: [address.street, address.district, address.city, address.country, address.delivery_instructions].filter(Boolean).join(', '),
+  }
+}
+
+function applyAddress(address?: CustomerAddress) {
+  const details = addressDetails(address)
+  contact.value = details.contact
+  delivery.value = details.delivery
+  appliedContact = details.contact
+  appliedDelivery = details.delivery
+}
+
+function chooseAddress(event: Event) {
   const id = (event.target as HTMLSelectElement).value
-  if (contact.value === appliedContact) contact.value = ''
-  if (delivery.value === appliedDelivery) delivery.value = ''
-  const address = addresses.value.find(item => item.id === id)
-  appliedContact = address ? [address.recipient_name, address.recipient_phone].filter(Boolean).join(' · ') : ''
-  appliedDelivery = address ? [address.street, address.district, address.city, address.country, address.delivery_instructions].filter(Boolean).join(', ') : ''
-  if (address) {
-    contact.value = appliedContact
-    delivery.value = appliedDelivery
+  addressHint.value = ''
+  if (id) applyAddress(addresses.value.find(item => item.id === id))
+  else {
+    if (contact.value === appliedContact) contact.value = ''
+    if (delivery.value === appliedDelivery) delivery.value = ''
+    appliedContact = ''
+    appliedDelivery = ''
+  }
+}
+
+async function handoff() {
+  if (checkingAddress.value) return
+  const id = addressChoice.value
+  if (!id) { await draft.handoff(); return }
+  const owner = identity.value?.id
+  if (!owner) return
+  const current = ++addressRevision
+  checkingAddress.value = true
+  addressHint.value = ''
+  try {
+    const rows = await $fetch<CustomerAddress[]>('/api/account/addresses', { query: { owner } })
+    if (current !== addressRevision || !active.value || owner !== identity.value?.id || id !== addressChoice.value) return
+    const address = rows.find(item => item.id === id)
+    addresses.value = rows
+    if (!address) {
+      addressChoice.value = ''
+      if (contact.value === appliedContact) contact.value = ''
+      if (delivery.value === appliedDelivery) delivery.value = ''
+      appliedContact = ''
+      appliedDelivery = ''
+      addressHint.value = 'customer.addresses.checkoutRemoved'
+      return
+    }
+    const details = addressDetails(address)
+    if (details.contact !== appliedContact || details.delivery !== appliedDelivery) {
+      if (contact.value === appliedContact) contact.value = details.contact
+      if (delivery.value === appliedDelivery) delivery.value = details.delivery
+      appliedContact = details.contact
+      appliedDelivery = details.delivery
+      addressHint.value = 'customer.addresses.checkoutChanged'
+      return
+    }
+    await draft.handoff()
+  } catch {
+    if (current === addressRevision) addressHint.value = 'customer.addresses.checkoutError'
+  } finally {
+    if (current === addressRevision) checkingAddress.value = false
   }
 }
 
@@ -113,11 +170,12 @@ function afterLeave() {
             <p class="commerce-secondary">{{ t('commerce.order.disclosure') }}</p>
             <label v-if="addresses.length" class="ui-field commerce-address">
               <span>{{ t('commerce.order.savedAddress') }}</span>
-              <select v-model="addressChoice" class="ui-control" @change="applyAddress">
+              <select v-model="addressChoice" class="ui-control" :disabled="checkingAddress" @change="chooseAddress">
                 <option value="">{{ t('commerce.order.noAddress') }}</option>
-                <option v-for="address in addresses" :key="address.id" :value="address.id">{{ address.label }} · {{ address.city }}</option>
+                <option v-for="address in addresses" :key="address.id" :value="address.id">{{ address.label }} · {{ address.city }}{{ address.is_default ? ` · ${t('customer.addresses.default')}` : '' }}</option>
               </select>
             </label>
+            <p v-if="addressHint" class="commerce-inline-note" role="alert">{{ t(addressHint) }}</p>
             <UiInput v-model="contact" :label="t('commerce.order.contact')" maxlength="200" />
             <UiInput v-model="delivery" :label="t('commerce.order.delivery')" maxlength="300" />
             <label class="ui-field commerce-preview">
@@ -136,8 +194,8 @@ function afterLeave() {
               {{ t('commerce.order.assistance') }}
             </NuxtLink>
           </template>
-          <UiButton v-else :disabled="checking || !usable || !contactAvailable || tooLong || failure === 'commerce.validation.error'"
-            :loading="checking" @click="draft.handoff()">
+          <UiButton v-else :disabled="checking || checkingAddress || !usable || !contactAvailable || tooLong || failure === 'commerce.validation.error'"
+            :loading="checking || checkingAddress" @click="handoff">
             <template #icon><Icon name="ion:logo-whatsapp" size="21" aria-hidden="true" /></template>
             {{ t('commerce.order.openWhatsApp') }}
           </UiButton>

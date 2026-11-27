@@ -1,15 +1,17 @@
 <script setup lang="ts">
-definePageMeta({ name: 'account', layout: 'auth', i18n: { paths: { fr: '/compte', es: '/cuenta' } } })
+definePageMeta({ name: 'account', layout: false, i18n: { paths: { fr: '/compte', es: '/cuenta' } } })
 
 const { t } = useI18n()
-const localePath = useLocalePath()
+const { setUser } = useCustomerSession()
 const panel = useTemplateRef('panel')
 const title = useTemplateRef('title')
 const form = useTemplateRef('form')
 const { play } = useEntranceMotion(panel, { duration: 0.28, opacity: 0.86 })
 const { user, mode, working, failure, notice, fieldErrors, email, password, confirmation, firstName, lastName,
-  view, session, refresh, accountLink, clearField, submit } = useAuthFlow(form)
+  view, session, refresh, accountLink, returnDestination, clearField, submit } = useAuthFlow(form)
 await session
+const signedIn = computed(() => view.value === 'signedIn' && !!user.value)
+watch([signedIn, user], () => { if (signedIn.value && user.value) setUser(user.value) }, { immediate: true })
 
 const isForm = computed(() => view.value === 'login' || view.value === 'signup' || view.value === 'reset' || view.value === 'recover')
 const compact = computed(() => view.value !== 'login' && view.value !== 'signup')
@@ -44,7 +46,9 @@ watch(view, () => {
 </script>
 
 <template>
-  <section :key="view" ref="panel" class="auth-panel" :data-auth-compact="compact || undefined" aria-labelledby="shop-auth-title">
+  <NuxtLayout :name="signedIn ? 'account' : 'auth'">
+  <CustomerOverview v-if="signedIn" />
+  <section v-else :key="view" ref="panel" class="auth-panel" :data-auth-compact="compact || undefined" aria-labelledby="shop-auth-title">
     <div
       v-if="stateIcon" class="auth-status-icon"
       :data-tone="view === 'confirmed' || view === 'updated' ? 'success' : view === 'expired' || view === 'unavailable' ? 'neutral' : undefined"
@@ -117,7 +121,7 @@ watch(view, () => {
 
     <div v-if="view === 'signupSent' || view === 'resetSent' || view === 'confirmed' || view === 'updated' || view === 'expired'" class="auth-state-actions">
       <NuxtLink
-        :to="view === 'expired' ? accountLink('reset') : accountLink()"
+        :to="view === 'expired' ? accountLink('reset') : user ? returnDestination() || accountLink() : accountLink()"
         class="ui-button auth-primary" data-variant="primary"
         @click="notice = undefined"
       >
@@ -125,9 +129,6 @@ watch(view, () => {
       </NuxtLink>
       <NuxtLink v-if="view === 'expired'" :to="accountLink()" class="auth-text-link">{{ t('auth.access.backToLogin') }}</NuxtLink>
     </div>
-    <div v-if="view === 'signedIn'" class="auth-state-actions">
-      <NuxtLink v-if="user?.role === 'admin'" :to="localePath({ name: 'shop-admin' })" class="auth-text-link">{{ t('auth.admin') }}</NuxtLink>
-      <UiButton variant="outline" :loading="working" :disabled="working" @click="submit('logout')">{{ t('auth.logout') }}</UiButton>
-    </div>
   </section>
+  </NuxtLayout>
 </template>

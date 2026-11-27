@@ -46,7 +46,7 @@ export function customerProfileInput(body: Record<string, unknown>) {
 export function customerAddressInput(body: Record<string, unknown>) {
   const text = (key: keyof typeof addressFields) => readText(body, key, addressFields[key],
     requiredAddressFields.some(field => field === key))
-  if (typeof body.is_default !== 'boolean') throw createError({ statusCode: 400, data: { field: 'is_default' } })
+  if (body.is_default !== null && typeof body.is_default !== 'boolean') throw createError({ statusCode: 400, data: { field: 'is_default' } })
   return { fields: { label: text('label'), recipient_name: text('recipient_name'), recipient_phone: text('recipient_phone'),
     country: text('country'), city: text('city'), district: text('district') || null,
     street: text('street'), delivery_instructions: text('delivery_instructions') || null }, preferDefault: body.is_default }
@@ -57,7 +57,7 @@ export async function saveCustomerAddress(event: H3Event, id?: string) {
   const { fields, preferDefault } = customerAddressInput(body)
   const client = shopSessionClient(event)
   const { data, error } = id
-    ? await client.from('addresses').update(preferDefault ? fields : { ...fields, is_default: false })
+    ? await client.from('addresses').update(preferDefault === false ? { ...fields, is_default: false } : fields)
       .eq('id', id).eq('user_id', user.id).select('id,is_default').maybeSingle()
     : await client.from('addresses').insert(fields).select('id,is_default').single()
   shopDataError(error)

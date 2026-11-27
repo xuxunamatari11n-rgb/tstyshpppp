@@ -154,6 +154,121 @@
       "confirm": "¿Podrían confirmar su disponibilidad y las condiciones de entrega?"
     }
   },
+  "customer": {
+    "navigation": "Navegación de la cuenta",
+    "back": "Volver",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "logoutError": "No se pudo cerrar la sesión. Vuelve a intentarlo.",
+    "nav": {
+      "overview": "Mi cuenta",
+      "favorites": "Mis favoritos",
+      "orders": "Mis pedidos",
+      "addresses": "Direcciones de entrega",
+      "profile": "Información personal",
+      "security": "Seguridad",
+      "assistance": "Ayuda"
+    },
+    "welcome": {
+      "named": "¡Hola, {name}!",
+      "generic": "¡Te damos la bienvenida!",
+      "description": "Tus favoritos, tus compras, tu espacio."
+    },
+    "shortcuts": {
+      "title": "Mis servicios",
+      "favorites": "Ver mis favoritos",
+      "addresses": "Gestionar direcciones",
+      "orders": "Consultar una solicitud"
+    },
+    "recent": {
+      "title": "Favoritos recientes",
+      "all": "Ver todos los favoritos"
+    },
+    "profile": {
+      "description": "Actualiza la información personal de tu cuenta.",
+      "first_name": "Nombre",
+      "last_name": "Apellidos",
+      "phone": "Teléfono (opcional)",
+      "emailHint": "Esta dirección sirve para iniciar sesión. Aquí es de solo lectura.",
+      "loadError": "No se pudo cargar tu perfil.",
+      "success": "Se guardó tu información.",
+      "error": "No se pudo guardar tu información. Vuelve a intentarlo."
+    },
+    "addresses": {
+      "saved": "Mis direcciones guardadas",
+      "count": "Ninguna dirección | {count} dirección | {count} direcciones",
+      "description": "Usa estas direcciones al preparar un pedido.",
+      "formDescription": "Escribe la dirección tal como quieres compartirla con la tienda.",
+      "add": "Añadir una dirección",
+      "create": "Nueva dirección",
+      "edit": "Editar dirección",
+      "editAction": "Editar",
+      "editNamed": "Editar {name}",
+      "deleteNamed": "Eliminar {name}",
+      "default": "Predeterminada",
+      "makeDefault": "Establecer como predeterminada",
+      "delete": "Eliminar",
+      "deleteTitle": "¿Eliminar esta dirección?",
+      "deleteDescription": "La dirección «{name}» se quitará de tu cuenta.",
+      "deletionHint": "Puedes añadir otra cuando quieras.",
+      "deleted": "Se eliminó la dirección.",
+      "defaultSet": "Se actualizó la dirección predeterminada.",
+      "defaultError": "No se pudo cambiar la dirección predeterminada. Vuelve a intentarlo.",
+      "deleteError": "No se pudo eliminar la dirección. Vuelve a intentarlo.",
+      "loadError": "No se pudieron cargar tus direcciones.",
+      "notFound": "No se encontró esta dirección.",
+      "emptyTitle": "Aún no tienes direcciones guardadas.",
+      "emptyText": "Añade una dirección y úsala al preparar tu próximo pedido.",
+      "savedFeedback": "Se guardó la dirección.",
+      "savedDefaultWarning": "Se guardó la dirección. Puedes marcarla como predeterminada desde la lista.",
+      "returnList": "Ver mis direcciones",
+      "createError": "No se pudo añadir la dirección. Vuelve a intentarlo.",
+      "updateError": "No se pudo editar la dirección. Vuelve a intentarlo.",
+      "checkoutChanged": "Esta dirección cambió. Revisa los datos de tu borrador.",
+      "checkoutRemoved": "Esta dirección se eliminó. Selecciona otra o introduce tus datos.",
+      "checkoutError": "No se pudo verificar la dirección guardada. Vuelve a intentarlo o introduce los datos manualmente."
+    },
+    "fields": {
+      "label": "Nombre de la dirección",
+      "recipient_name": "Nombre de la persona destinataria",
+      "recipient_phone": "Teléfono de la persona destinataria",
+      "country": "País",
+      "city": "Ciudad",
+      "district": "Barrio o zona (opcional)",
+      "street": "Dirección de entrega",
+      "delivery_instructions": "Indicaciones de entrega (opcional)"
+    },
+    "validation": {
+      "required": "Completa este campo.",
+      "tooLong": "Este campo acepta un máximo de {count} caracteres."
+    },
+    "orders": {
+      "title": "Seguimos en contacto.",
+      "description": "Las compras y el seguimiento se gestionan directamente en la conversación de WhatsApp con la tienda.",
+      "actions": {
+        "track": "Consultar un pedido",
+        "change": "Modificar una solicitud",
+        "delivery": "Preguntar por la entrega",
+        "help": "Obtener ayuda con una compra"
+      },
+      "messages": {
+        "track": "Hola, ¿pueden ayudarme a consultar mi pedido de Testy Shop?",
+        "change": "Hola, quiero modificar mi solicitud de pedido de Testy Shop. ¿Pueden ayudarme?",
+        "delivery": "Hola, tengo una pregunta sobre la entrega de un pedido de Testy Shop.",
+        "help": "Hola, ¿pueden ayudarme con una compra de Testy Shop?"
+      }
+    },
+    "security": {
+      "requirements": "Usa una contraseña nueva de 8 a 128 caracteres.",
+      "change": "Cambiar mi contraseña"
+    },
+    "support": {
+      "title": "¿Cómo podemos ayudarte?",
+      "description": "Encuentra los datos de contacto y la información útil de la tienda.",
+      "unavailable": "El contacto por WhatsApp no está disponible por el momento. Consulta la información de ayuda de la tienda.",
+      "resources": "Información de la tienda"
+    }
+  },
   "auth": {
     "account": "Mi cuenta",
     "login": "Iniciar sesión",
@@ -258,6 +373,7 @@
       "email": "Introduce una dirección de correo válida.",
       "password": "Comprueba la contraseña. Una contraseña nueva debe tener al menos ocho caracteres.",
       "rate": "Demasiados intentos. Vuelve a intentarlo más tarde.",
+      "reauth": "Vuelve a iniciar sesión para verificar tu identidad antes de cambiar la contraseña.",
       "unconfirmed": "Confirma tu correo electrónico antes de iniciar sesión.",
       "credentials": "Correo electrónico o contraseña incorrectos.",
       "invalid": "La solicitud no es válida.",

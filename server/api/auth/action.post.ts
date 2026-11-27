@@ -1,5 +1,6 @@
 export default defineEventHandler(async event => {
   requireShopOrigin(event)
+  setResponseHeader(event, 'Cache-Control', 'private, no-store')
   const input = await readBody<Record<string, unknown> | null>(event)
   const body = input && typeof input === 'object' ? input : {}
   const action = body.action
@@ -19,7 +20,8 @@ export default defineEventHandler(async event => {
   const client = shopSessionClient(event)
   const name = (value: unknown) => typeof value === 'string' ? value.trim().slice(0, 80) : ''
   const callback = (flow: 'confirm' | 'recovery') => `${shopOrigin(event)}/api/auth/callback/${locale}/${flow}`
-  if (action === 'recover') await requireShopSession(event)
+  if ((action === 'recover' || action === 'logout') && body.owner !== undefined) await requireCustomerOwner(event, body.owner)
+  else if (action === 'recover') await requireShopSession(event)
   const outcome = action === 'login' ? await client.auth.signInWithPassword({ email, password })
     : action === 'signup' ? await client.auth.signUp({ email, password, options: {
       data: { first_name: name(body.firstName), last_name: name(body.lastName) }, emailRedirectTo: callback('confirm'),
@@ -32,6 +34,7 @@ export default defineEventHandler(async event => {
     const code = upstream.status === 429 ? 'rate'
       : upstream.code === 'email_not_confirmed' ? 'unconfirmed'
       : upstream.code === 'weak_password' ? 'password'
+      : upstream.code === 'reauthentication_needed' ? 'reauth'
       : action === 'login' && upstream.code === 'invalid_credentials' ? 'credentials' : 'unavailable'
     throw createError({ statusCode: upstream.status === 429 ? 429 : upstream.status && upstream.status < 500 ? 400 : 503, data: { code } })
   }

@@ -1,4 +1,5 @@
 import type { Ref } from 'vue'
+import { customerDestination, customerReturnQuery } from '~~/shared/utils/customerAccount'
 
 type AuthMode = 'login' | 'signup' | 'reset' | 'recover'
 type AuthAction = AuthMode | 'logout'
@@ -36,7 +37,13 @@ export function useAuthFlow(form: Readonly<Ref<HTMLFormElement | null>>) {
   })
 
   function accountLink(intent?: string) {
-    return localePath({ name: 'account', query: intent ? { intent } : {} })
+    const next = customerReturnQuery(route.query.next, route.query.address)
+    return localePath({ name: 'account', query: { ...next, ...(intent ? { intent } : {}) } })
+  }
+
+  function returnDestination() {
+    const target = customerDestination(route.query.next, route.query.address)
+    return target ? localePath(target) : undefined
   }
 
   function clearFeedback() {
@@ -93,6 +100,7 @@ export function useAuthFlow(form: Readonly<Ref<HTMLFormElement | null>>) {
     try {
       await $fetch('/api/auth/action', {
         method: 'POST', body: { action, locale: locale.value, email: email.value, password: password.value,
+          owner: action === 'recover' || action === 'logout' ? user.value?.id : undefined,
           firstName: firstName.value, lastName: lastName.value },
       })
       password.value = ''
@@ -106,7 +114,7 @@ export function useAuthFlow(form: Readonly<Ref<HTMLFormElement | null>>) {
         await refresh()
       } else {
         await refresh()
-        await navigateTo(accountLink(), { replace: true })
+        await navigateTo(action === 'login' ? returnDestination() || accountLink() : accountLink(), { replace: true })
         if (action === 'recover') notice.value = 'updated'
       }
     } catch (caught) {
@@ -116,7 +124,7 @@ export function useAuthFlow(form: Readonly<Ref<HTMLFormElement | null>>) {
         await nextTick()
         form.value?.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus()
       } else {
-        failure.value = reason && ['rate', 'unconfirmed', 'credentials', 'invalid'].includes(reason) ? reason : 'unavailable'
+        failure.value = reason && ['rate', 'unconfirmed', 'credentials', 'invalid', 'reauth'].includes(reason) ? reason : 'unavailable'
       }
     } finally {
       working.value = false
@@ -124,6 +132,6 @@ export function useAuthFlow(form: Readonly<Ref<HTMLFormElement | null>>) {
   }
 
   return { user, mode, working, failure, notice, fieldErrors, email, password, confirmation, firstName, lastName,
-    view, session, refresh, accountLink, clearField, submit }
+    view, session, refresh, accountLink, returnDestination, clearField, submit }
 }
 

@@ -154,6 +154,121 @@
       "confirm": "Pouvez-vous me confirmer leur disponibilité et les modalités de livraison ?"
     }
   },
+  "customer": {
+    "navigation": "Navigation du compte",
+    "back": "Retour",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "logoutError": "Impossible de te déconnecter pour le moment. Réessaie.",
+    "nav": {
+      "overview": "Mon compte",
+      "favorites": "Mes favoris",
+      "orders": "Mes commandes",
+      "addresses": "Adresses de livraison",
+      "profile": "Informations personnelles",
+      "security": "Sécurité",
+      "assistance": "Assistance"
+    },
+    "welcome": {
+      "named": "Bonjour, {name} !",
+      "generic": "Bienvenue dans ton espace !",
+      "description": "Tes envies, tes achats, ton espace."
+    },
+    "shortcuts": {
+      "title": "Mes services",
+      "favorites": "Voir mes envies",
+      "addresses": "Gérer mes adresses",
+      "orders": "Suivre une demande"
+    },
+    "recent": {
+      "title": "Favoris récents",
+      "all": "Voir tous les favoris"
+    },
+    "profile": {
+      "description": "Mets à jour les informations personnelles associées à ton compte.",
+      "first_name": "Prénom",
+      "last_name": "Nom",
+      "phone": "Téléphone (facultatif)",
+      "emailHint": "Cette adresse sert à la connexion. Elle est en lecture seule ici.",
+      "loadError": "Impossible de charger ton profil.",
+      "success": "Tes informations ont été enregistrées.",
+      "error": "Impossible d’enregistrer tes informations. Réessaie."
+    },
+    "addresses": {
+      "saved": "Mes adresses enregistrées",
+      "count": "Aucune adresse | {count} adresse | {count} adresses",
+      "description": "Retrouve ces adresses quand tu prépares une commande.",
+      "formDescription": "Renseigne l’adresse comme tu veux la communiquer à la boutique.",
+      "add": "Ajouter une adresse",
+      "create": "Nouvelle adresse",
+      "edit": "Modifier l’adresse",
+      "editAction": "Modifier",
+      "editNamed": "Modifier {name}",
+      "deleteNamed": "Supprimer {name}",
+      "default": "Par défaut",
+      "makeDefault": "Définir par défaut",
+      "delete": "Supprimer",
+      "deleteTitle": "Supprimer cette adresse ?",
+      "deleteDescription": "L’adresse « {name} » sera retirée de ton compte.",
+      "deletionHint": "Tu pourras en ajouter une autre à tout moment.",
+      "deleted": "L’adresse a été supprimée.",
+      "defaultSet": "L’adresse par défaut a été mise à jour.",
+      "defaultError": "Impossible de changer l’adresse par défaut. Réessaie.",
+      "deleteError": "Impossible de supprimer l’adresse. Réessaie.",
+      "loadError": "Impossible de charger tes adresses.",
+      "notFound": "Cette adresse est introuvable.",
+      "emptyTitle": "Aucune adresse enregistrée.",
+      "emptyText": "Ajoute une adresse pour la retrouver lors de ta prochaine commande.",
+      "savedFeedback": "L’adresse a été enregistrée.",
+      "savedDefaultWarning": "L’adresse a été enregistrée. Tu peux la définir par défaut depuis la liste.",
+      "returnList": "Voir mes adresses",
+      "createError": "Impossible d’ajouter l’adresse. Réessaie.",
+      "updateError": "Impossible de modifier l’adresse. Réessaie.",
+      "checkoutChanged": "Cette adresse a été modifiée. Vérifie les coordonnées dans ton brouillon.",
+      "checkoutRemoved": "Cette adresse a été supprimée. Choisis une autre adresse ou saisis tes informations.",
+      "checkoutError": "Impossible de vérifier l’adresse enregistrée. Réessaie ou saisis les informations manuellement."
+    },
+    "fields": {
+      "label": "Nom de l’adresse",
+      "recipient_name": "Nom du destinataire",
+      "recipient_phone": "Téléphone du destinataire",
+      "country": "Pays",
+      "city": "Ville",
+      "district": "Quartier ou zone (facultatif)",
+      "street": "Adresse de livraison",
+      "delivery_instructions": "Indications de livraison (facultatif)"
+    },
+    "validation": {
+      "required": "Renseigne ce champ.",
+      "tooLong": "Ce champ accepte {count} caractères au maximum."
+    },
+    "orders": {
+      "title": "On reste en contact.",
+      "description": "Tes achats et le suivi de tes demandes se font dans la conversation WhatsApp avec la boutique.",
+      "actions": {
+        "track": "Suivre une commande",
+        "change": "Modifier une demande",
+        "delivery": "Poser une question sur la livraison",
+        "help": "Obtenir de l’aide avec un achat"
+      },
+      "messages": {
+        "track": "Bonjour, pouvez-vous m’aider à suivre ma commande Testy Shop ?",
+        "change": "Bonjour, je souhaite modifier ma demande de commande Testy Shop. Pouvez-vous m’aider ?",
+        "delivery": "Bonjour, j’ai une question sur la livraison d’une commande Testy Shop.",
+        "help": "Bonjour, pouvez-vous m’aider au sujet d’un achat Testy Shop ?"
+      }
+    },
+    "security": {
+      "requirements": "Utilise un nouveau mot de passe de 8 à 128 caractères.",
+      "change": "Changer mon mot de passe"
+    },
+    "support": {
+      "title": "Comment peut-on t’aider ?",
+      "description": "Retrouve les moyens de contacter la boutique et les informations utiles.",
+      "unavailable": "Le contact WhatsApp est momentanément indisponible. Consulte les informations d’assistance de la boutique.",
+      "resources": "Informations de la boutique"
+    }
+  },
   "auth": {
     "account": "Mon compte",
     "login": "Se connecter",
@@ -258,6 +373,7 @@
       "email": "Saisissez une adresse e-mail valide.",
       "password": "Vérifiez le mot de passe. Un nouveau mot de passe doit comporter au moins huit caractères.",
       "rate": "Trop de tentatives. Réessayez plus tard.",
+      "reauth": "Reconnecte-toi pour vérifier ton identité avant de changer de mot de passe.",
       "unconfirmed": "Confirmez votre adresse e-mail avant de vous connecter.",
       "credentials": "Adresse e-mail ou mot de passe incorrect.",
       "invalid": "La demande est invalide.",
