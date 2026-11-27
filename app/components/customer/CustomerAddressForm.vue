@@ -78,7 +78,7 @@ async function save() {
         <template v-for="key in keys" :key="key">
           <UiTextarea v-if="key === 'street' || key === 'delivery_instructions'" v-model="fields[key]" class="customer-field-wide" :name="key"
             :label="t(`customer.fields.${key}`)" :autocomplete="autocomplete[key]" :maxlength="addressFields[key]"
-            :required="required(key)" :error="errors[key]" :disabled="saving" rows="2" @update:model-value="delete errors[key]" />
+            :required="required(key)" :error="errors[key]" :disabled="saving" :rows="2" @update:model-value="delete errors[key]" />
           <UiInput v-else v-model="fields[key]" :name="key" :label="t(`customer.fields.${key}`)"
             :type="key === 'recipient_phone' ? 'tel' : 'text'" :autocomplete="autocomplete[key]" :maxlength="addressFields[key]"
             :required="required(key)" :error="errors[key]" :disabled="saving" @update:model-value="delete errors[key]" />

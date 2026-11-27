@@ -376,6 +376,9 @@
       "reauth": "Reconnecte-toi pour vérifier ton identité avant de changer de mot de passe.",
       "unconfirmed": "Confirmez votre adresse e-mail avant de vous connecter.",
       "credentials": "Adresse e-mail ou mot de passe incorrect.",
+      "signup": "Impossible de créer le compte avec ces informations. Si tu as déjà un compte, passe par « Se connecter » pour retrouver ton accès.",
+      "signupClosed": "Les inscriptions sont fermées pour le moment.",
+      "signupSession": "Ton compte a été créé. Passe par « Se connecter » pour ouvrir ta session.",
       "invalid": "La demande est invalide.",
       "unavailable": "L’authentification est momentanément indisponible."
     }

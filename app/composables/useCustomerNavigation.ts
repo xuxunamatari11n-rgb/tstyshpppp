@@ -16,7 +16,10 @@ export function useCustomerNavigation() {
   const route = useRoute()
   const baseName = useRouteBaseName()
   const localePath = useLocalePath()
-  const current = computed(() => baseName(route))
+  const current = computed(() => {
+    const name = baseName(route)
+    return typeof name === 'string' ? name : undefined
+  })
   const addressForm = computed(() => current.value === 'account-address-new' || current.value === 'account-address-edit')
   const currentGroup = computed(() => addressForm.value ? 'account-addresses' : current.value)
   const currentItem = computed(() => navigation.flat().find(link => link.name === currentGroup.value))

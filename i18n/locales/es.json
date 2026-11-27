@@ -376,6 +376,9 @@
       "reauth": "Vuelve a iniciar sesión para verificar tu identidad antes de cambiar la contraseña.",
       "unconfirmed": "Confirma tu correo electrónico antes de iniciar sesión.",
       "credentials": "Correo electrónico o contraseña incorrectos.",
+      "signup": "No se pudo crear la cuenta con esos datos. Si ya tienes una cuenta, selecciona « Iniciar sesión » para recuperar el acceso.",
+      "signupClosed": "El registro está cerrado por el momento.",
+      "signupSession": "Se creó tu cuenta. Selecciona « Iniciar sesión » para acceder.",
       "invalid": "La solicitud no es válida.",
       "unavailable": "La autenticación no está disponible en este momento."
     }

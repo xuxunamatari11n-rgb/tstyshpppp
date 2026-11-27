@@ -82,6 +82,10 @@ export function useAuthFlow(form: Readonly<Ref<HTMLFormElement | null>>) {
     return false
   }
 
+  function broadcastSessionChange() {
+    try { localStorage.setItem('testy-shop/auth-changed', String(Date.now())) } catch { /* Current tab still refreshes. */ }
+  }
+
   async function submit(action: AuthAction) {
     if (working.value) return
     clearFeedback()
@@ -98,7 +102,7 @@ export function useAuthFlow(form: Readonly<Ref<HTMLFormElement | null>>) {
     working.value = true
     notice.value = undefined
     try {
-      await $fetch('/api/auth/action', {
+      const result = await $fetch<{ ok: true; signup?: 'session' | 'confirmation' }>('/api/auth/action', {
         method: 'POST', body: { action, locale: locale.value, email: email.value, password: password.value,
           owner: action === 'recover' || action === 'logout' ? user.value?.id : undefined,
           firstName: firstName.value, lastName: lastName.value },
@@ -107,13 +111,18 @@ export function useAuthFlow(form: Readonly<Ref<HTMLFormElement | null>>) {
       confirmation.value = ''
       if (action === 'login' || action === 'logout') {
         invalidate(action === 'logout' ? null : undefined)
-        try { localStorage.setItem('testy-shop/auth-changed', String(Date.now())) } catch { /* Current tab still refreshes. */ }
+        broadcastSessionChange()
       }
-      if (action === 'signup' || action === 'reset') {
-        if (mode.value === action) notice.value = action === 'signup' ? 'signupSent' : 'resetSent'
-        await refresh()
-      } else {
-        await refresh()
+      await refresh()
+      if (action === 'signup' && data.value?.user && !error.value) {
+        broadcastSessionChange()
+        await navigateTo(returnDestination() || accountLink(), { replace: true })
+      } else if (action === 'signup' && mode.value === 'signup') {
+        if (result.signup === 'confirmation') notice.value = 'signupSent'
+        else failure.value = 'signupSession'
+      } else if (action === 'reset') {
+        if (mode.value === 'reset') notice.value = 'resetSent'
+      } else if (action !== 'signup') {
         await navigateTo(action === 'login' ? returnDestination() || accountLink() : accountLink(), { replace: true })
         if (action === 'recover') notice.value = 'updated'
       }
@@ -124,7 +133,7 @@ export function useAuthFlow(form: Readonly<Ref<HTMLFormElement | null>>) {
         await nextTick()
         form.value?.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus()
       } else {
-        failure.value = reason && ['rate', 'unconfirmed', 'credentials', 'invalid', 'reauth'].includes(reason) ? reason : 'unavailable'
+        failure.value = reason && ['rate', 'unconfirmed', 'credentials', 'invalid', 'reauth', 'signup', 'signupClosed'].includes(reason) ? reason : 'unavailable'
       }
     } finally {
       working.value = false

@@ -25,7 +25,7 @@ export default defineNuxtConfig({
     (_options, nuxt) => {
       nuxt.hook('pages:extend', (pages) => {
         if (!nuxt.options.dev) {
-          const designSystemIndex = pages.findIndex((page: { name: string }) => page.name === 'design-system')
+          const designSystemIndex = pages.findIndex(page => page.name === 'design-system')
           if (designSystemIndex !== -1) pages.splice(designSystemIndex, 1)
         }
 
