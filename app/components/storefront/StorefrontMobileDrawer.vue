@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { featuredCategories } from '~/mocks/home'
-import { storefrontCategories } from '~/mocks/storefront'
 
 const { id } = defineProps<{ id: string }>()
 const { t } = useI18n()
@@ -10,7 +8,7 @@ const catalogue = useHomeCatalogueLink()
 const whatsappUrl = useWhatsAppContact()
 const assistance = computed(() => ({ path: route.path, query: route.query, hash: '#storefront-assistance' }))
 const account = computed(() => destination('account'))
-const thumbnails = new Map(featuredCategories.map(category => [category.id, category.image.src]))
+const { categories } = useShopMeta()
 const dialog = useTemplateRef('dialog')
 const closeButton = useTemplateRef('closeButton')
 const { active, open, close, finishClose, trapFocus } = useStorefrontModal(dialog, closeButton)
@@ -67,22 +65,22 @@ defineExpose({ open })
         <nav class="storefront-drawer-group" :aria-label="t('storefront.drawer.categories')" data-drawer-group>
           <h2 class="storefront-drawer-heading">{{ t('storefront.drawer.categories') }}</h2>
           <ul>
-            <li v-for="category in storefrontCategories" :key="category.id" class="storefront-drawer-category">
+            <li v-for="category in categories" :key="category.id" class="storefront-drawer-category">
               <NuxtLink :to="catalogue({ categoryId: category.id })" class="storefront-drawer-link storefront-drawer-category-link">
                 <span class="storefront-drawer-thumbnail">
-                  <img v-if="thumbnails.has(category.id)" :src="thumbnails.get(category.id)" width="34" height="34" loading="lazy" alt="">
+                  <img v-if="category.image" :src="category.image.src" width="34" height="34" loading="lazy" alt="">
                   <Icon v-else name="ion:grid-outline" size="17" aria-hidden="true" />
                 </span>
-                {{ t(`storefront.categories.${category.id}`) }}
+                {{ category.name }}
               </NuxtLink>
               <details v-if="category.subcategories.length" :name="id" class="storefront-drawer-subcategories">
-                <summary class="storefront-mobile-utility" :aria-label="t('storefront.drawer.subcategories', { category: t(`storefront.categories.${category.id}`) })">
+                <summary class="storefront-mobile-utility" :aria-label="t('storefront.drawer.subcategories', { category: category.name })">
                   <Icon name="ion:chevron-down-outline" size="16" aria-hidden="true" />
                 </summary>
                 <ul>
-                  <li v-for="subcategory in category.subcategories" :key="subcategory">
-                    <NuxtLink :to="catalogue({ categoryId: category.id, subcategory })" class="storefront-drawer-link">
-                      {{ t(`storefront.subcategories.${subcategory}`) }}
+                  <li v-for="subcategory in category.subcategories" :key="subcategory.id">
+                    <NuxtLink :to="catalogue({ categoryId: category.id, subcategory: subcategory.id })" class="storefront-drawer-link">
+                      {{ subcategory.name }}
                     </NuxtLink>
                   </li>
                 </ul>

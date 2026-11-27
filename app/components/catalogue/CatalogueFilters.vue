@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import type { CategoryId, CollectionId } from '~/types/commerce'
-import { catalogueCategories, cataloguePriceRange, findCatalogueCategory, type CatalogueFilters } from '~/utils/catalogue'
+import { cataloguePriceRange, findCatalogueCategory, type CatalogueFilters } from '~/utils/catalogue'
 
 type FilterUpdate = CatalogueFilters & { selection?: CollectionId }
 const props = defineProps<{ modelValue: FilterUpdate; draft?: boolean }>()
 const emit = defineEmits<{ 'update:modelValue': [value: FilterUpdate] }>()
 const { t } = useI18n()
+const { categories } = useShopMeta()
 const localPrice = reactive({ min: '', max: '' })
 watch(() => [props.modelValue.min, props.modelValue.max] as const, ([min, max]) => {
   Object.assign(localPrice, { min, max })
@@ -13,10 +14,10 @@ watch(() => [props.modelValue.min, props.modelValue.max] as const, ([min, max]) 
 const prices = computed(() => props.draft ? props.modelValue : localPrice)
 const error = computed(() => cataloguePriceRange(prices.value).error)
 const category = computed(() => props.modelValue.categories.length === 1
-  ? findCatalogueCategory(props.modelValue.categories[0]) : undefined)
+  ? findCatalogueCategory(props.modelValue.categories[0], categories.value) : undefined)
 const subcategories = computed(() => [
   { value: '', label: t('catalogue.allSubcategories') },
-  ...(category.value?.subcategories ?? []).map(id => ({ value: id, label: t(`storefront.subcategories.${id}`) })),
+  ...(category.value?.subcategories ?? []).map(item => ({ value: item.id, label: item.name })),
 ])
 
 function patch(update: Partial<FilterUpdate>) {
@@ -55,9 +56,9 @@ function applyPrice() {
       </summary>
       <div class="catalogue-filter-fields">
         <UiCheckbox
-          v-for="entry in catalogueCategories"
+          v-for="entry in categories"
           :key="entry.id"
-          :label="t(`storefront.categories.${entry.id}`)"
+          :label="entry.name"
           :model-value="modelValue.categories.includes(entry.id)"
           @update:model-value="toggleCategory(entry.id, $event)"
         />

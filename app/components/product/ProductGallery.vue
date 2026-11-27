@@ -3,6 +3,7 @@ import type { CommercialImage } from '~/types/commerce'
 
 const props = defineProps<{ images: readonly CommercialImage[]; discount?: number }>()
 const { t } = useI18n()
+const { photoAlt } = useProductContent()
 const selected = ref(0)
 const current = computed(() => props.images[selected.value])
 const multiple = computed(() => props.images.length > 1)
@@ -69,7 +70,7 @@ const position = computed(() => t('product.photoPosition', { index: selected.val
     <div class="product-gallery-main">
       <div class="product-gallery-stage" @touchstart.passive="touchStart" @touchend.passive="touchEnd" @touchcancel="start = undefined">
         <button v-if="current && !failedSources.has(current.src)" type="button" class="product-gallery-zoom"
-          :aria-label="t('product.viewPhoto', { description: t(current.altKey) })" aria-haspopup="dialog" :aria-controls="viewerId" @click="showViewer">
+          :aria-label="t('product.viewPhoto', { description: photoAlt(current) })" aria-haspopup="dialog" :aria-controls="viewerId" @click="showViewer">
           <ProductPhoto :key="current.src" :image="current" priority @failed="current && failedSources.add(current.src)" />
           <span class="product-zoom-badge" aria-hidden="true"><Icon name="ion:expand-outline" size="21" /></span>
         </button>

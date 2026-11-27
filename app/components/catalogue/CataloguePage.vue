@@ -1,25 +1,32 @@
 <script setup lang="ts">
+import { cataloguePageSize } from '~/composables/useCatalogue'
 import type { CategoryId, CollectionId } from '~/types/commerce'
 import {
-  cataloguePriceRange, catalogueSorts, emptyCatalogueFilters, findCatalogueCategory,
+  cataloguePriceRange, catalogueSorts, emptyCatalogueFilters,
   type CatalogueFilters, type CatalogueSort, type CatalogueState,
 } from '~/utils/catalogue'
 
 const { t } = useI18n()
 const localePath = useLocalePath()
-const { source: { data, status, error, refresh }, view, state, results, visible, clearState, to, commit, preview, setSort } = useCatalogue()
+const { source: { status, error, refresh }, view, category, invalidCategory, state, total, visible, clearState, to, commit, preview, setSort } = useCatalogue()
+const { categoryName, subcategoryName } = useShopMeta()
+const formatPrice = useShopPrice()
+const lastPage = computed(() => Math.min(10_000, Math.max(1, Math.ceil(total.value / cataloguePageSize))))
 const loading = computed(() => status.value === 'idle' || status.value === 'pending')
-const category = computed(() => view.value === 'category' ? findCatalogueCategory(state.value.categories[0]) : undefined)
+if (import.meta.server && invalidCategory.value) {
+  const event = useRequestEvent()
+  if (event) setResponseStatus(event, 404)
+}
 const heading = computed(() => {
   if (view.value === 'search') return t('storefront.search.results')
-  if (category.value) return t(`storefront.categories.${category.value.id}`)
+  if (category.value) return category.value.name
+  if (invalidCategory.value) return t('catalogue.noCategory')
   if (state.value.selection) return t(`storefront.nav.${state.value.selection}`)
   return t('catalogue.allProducts')
 })
 const isCatalogueHome = computed(() => view.value === 'catalogue' && !state.value.selection)
 const searchEmpty = computed(() => view.value === 'search' && !state.value.q)
 const sortOptions = computed(() => catalogueSorts.map(value => ({ value, label: t(`catalogue.sorts.${value}`) })))
-const grid = useTemplateRef('grid')
 const motion = useCatalogueMotion()
 useSeoMeta({ title: heading, robots: 'noindex, follow' })
 
@@ -30,7 +37,22 @@ const sortSheet = useTemplateRef('sortSheet')
 const filterId = useId()
 const sortId = useId()
 const draftError = computed(() => cataloguePriceRange(draft.value).error)
-const draftCount = computed(() => preview(draft.value))
+const draftCount = ref<number>()
+const draftOpen = ref(false)
+watch([draft, draftOpen, draftError], ([fields, active, invalid], _previous, onCleanup) => {
+  draftCount.value = undefined
+  if (!active || invalid) return
+  const controller = new AbortController()
+  const timeout = setTimeout(async () => {
+    try {
+      const count = await preview(fields, controller.signal)
+      if (!controller.signal.aborted) draftCount.value = count
+    } catch {
+      // A failed preview leaves the generic apply action available.
+    }
+  }, 200)
+  onCleanup(() => { clearTimeout(timeout); controller.abort() })
+}, { deep: true })
 
 function pickCategory(id?: CategoryId) {
   const next = { ...state.value, categories: id ? [id] : [], subcategory: '', page: 1 }
@@ -42,12 +64,12 @@ type FilterChip = { key: string; label: string; remove: Partial<CatalogueState> 
 const chips = computed(() => {
   const value = state.value
   const filters: FilterChip[] = value.categories.map(id => ({
-    key: id, label: t(`storefront.categories.${id}`),
+    key: id, label: categoryName(id),
     remove: { categories: value.categories.filter(category => category !== id), subcategory: '' },
   }))
-  if (value.subcategory) filters.push({ key: 'subcategory', label: t(`storefront.subcategories.${value.subcategory}`), remove: { subcategory: '' } })
-  if (value.min) filters.push({ key: 'min', label: t('catalogue.from', { price: formatCurrency(Number(value.min)) }), remove: { min: '' } })
-  if (value.max) filters.push({ key: 'max', label: t('catalogue.upTo', { price: formatCurrency(Number(value.max)) }), remove: { max: '' } })
+  if (value.subcategory) filters.push({ key: 'subcategory', label: subcategoryName(value.subcategory), remove: { subcategory: '' } })
+  if (value.min) filters.push({ key: 'min', label: t('catalogue.from', { price: formatPrice(Number(value.min)) }), remove: { min: '' } })
+  if (value.max) filters.push({ key: 'max', label: t('catalogue.upTo', { price: formatPrice(Number(value.max)) }), remove: { max: '' } })
   if (value.stock) filters.push({ key: 'stock', label: t('catalogue.stock'), remove: { stock: false } })
   if (value.selection) {
     const selection = value.selection
@@ -62,7 +84,9 @@ const chips = computed(() => {
 })
 const hasNarrowingFilters = computed(() => chips.value.length > (category.value ? 1 : 0))
 const emptyTitle = computed(() => {
-  if (!data.value?.products.length) return t('catalogue.empty')
+  if (invalidCategory.value) return t('catalogue.noCategory')
+  if (state.value.page > lastPage.value && total.value) return t('catalogue.pageUnavailable')
+  if (!state.value.q && !chips.value.length) return t('catalogue.empty')
   if (hasNarrowingFilters.value) return t('catalogue.noFiltered')
   return t(view.value === 'search' ? 'catalogue.noSearch' : 'catalogue.noCategory')
 })
@@ -70,7 +94,10 @@ const emptyTitle = computed(() => {
 function openFilters(event: MouseEvent) {
   const { sort: _sort, q: _q, page: _page, ...filters } = state.value
   draft.value = { ...filters, categories: [...filters.categories] }
-  if (event.currentTarget instanceof HTMLElement) void filterSheet.value?.open(event.currentTarget)
+  if (event.currentTarget instanceof HTMLElement) {
+    draftOpen.value = true
+    void filterSheet.value?.open(event.currentTarget)
+  }
 }
 
 function openSort(event: MouseEvent) {
@@ -93,11 +120,8 @@ function selectSort(value: string) {
   if (sort) return setSort(sort)
 }
 
-async function loadMore() {
-  const firstNew = visible.value.length
-  await commit({ page: state.value.page + 1 })
-  await nextTick()
-  grid.value?.$el?.children[firstNew]?.focus({ preventScroll: true })
+function changePage(page: number) {
+  return commit({ page: Math.max(1, Math.min(lastPage.value, page)) })
 }
 </script>
 
@@ -119,8 +143,9 @@ async function loadMore() {
       </nav>
       <h1>{{ heading }}</h1>
       <p v-if="view === 'search' && state.q" class="catalogue-query">{{ t('storefront.search.query', { query: state.q }) }}</p>
+      <p v-else-if="category?.description">{{ category.description }}</p>
       <p v-else-if="searchEmpty">{{ t('catalogue.searchPrompt') }}</p>
-      <p v-if="!loading && !error && !searchEmpty" class="catalogue-heading-count">{{ t('catalogue.results', results.length) }}</p>
+      <p v-if="!loading && !error && !searchEmpty" class="catalogue-heading-count">{{ t('catalogue.results', total) }}</p>
     </header>
 
     <CatalogueCategories :state="state" :link="pickCategory" />
@@ -135,7 +160,7 @@ async function loadMore() {
       <section class="catalogue-results" :aria-label="t('catalogue.resultsRegion')" :aria-busy="loading">
         <div class="catalogue-toolbar">
           <p role="status" aria-live="polite" class="catalogue-status">
-            <template v-if="!loading && !error && !searchEmpty">{{ t('catalogue.results', results.length) }}</template>
+            <template v-if="!loading && !error && !searchEmpty">{{ t('catalogue.results', total) }}</template>
           </p>
           <div class="catalogue-desktop-sort">
             <UiSelect :model-value="state.sort" :options="sortOptions" :label="t('catalogue.sort')" @update:model-value="selectSort" />
@@ -176,39 +201,40 @@ async function loadMore() {
         <UiEmptyState v-else-if="searchEmpty" as="h2" :title="t('catalogue.searchPrompt')" icon="ion:search-outline">
           <template #action><NuxtLink class="ui-button" data-variant="outline" :to="localePath({ name: 'catalogue' })">{{ t('catalogue.browse') }}</NuxtLink></template>
         </UiEmptyState>
-        <UiEmptyState v-else-if="!results.length" as="h2"
+        <UiEmptyState v-else-if="!visible.length" as="h2"
           :title="emptyTitle"
           :description="t(view === 'search' ? 'storefront.search.retry' : 'catalogue.emptyHint')"
         >
           <template #action>
-            <UiButton v-if="hasNarrowingFilters" variant="outline" @click="commit(clearState)">{{ t('catalogue.reset') }}</UiButton>
+            <UiButton v-if="state.page > lastPage && total" variant="outline" @click="changePage(lastPage)">{{ t('catalogue.previousPage') }}</UiButton>
+            <UiButton v-else-if="hasNarrowingFilters" variant="outline" @click="commit(clearState)">{{ t('catalogue.reset') }}</UiButton>
             <NuxtLink v-else class="ui-button" data-variant="outline" :to="localePath({ name: 'catalogue' })">
               {{ t(view === 'search' ? 'catalogue.clearSearch' : 'catalogue.browse') }}
             </NuxtLink>
           </template>
         </UiEmptyState>
         <template v-else>
-          <TransitionGroup ref="grid" v-bind="motion" :css="false" tag="ul" class="catalogue-grid">
+          <TransitionGroup v-bind="motion" :css="false" tag="ul" class="catalogue-grid">
             <li v-for="product in visible" :key="product.id" tabindex="-1">
               <HomeProductCard :product="product" />
             </li>
           </TransitionGroup>
           <div class="catalogue-pagination">
-            <p role="status">{{ t('catalogue.visible', { shown: visible.length, total: results.length }) }}</p>
-            <UiButton v-if="visible.length < results.length" variant="outline" @click="loadMore">
-              {{ t('catalogue.loadMore') }} <Icon name="ion:chevron-down-outline" size="17" aria-hidden="true" />
-            </UiButton>
-            <p v-else class="text-xs">{{ t('catalogue.end') }}</p>
+            <p role="status">{{ t('catalogue.page', { page: state.page, total: lastPage }) }}</p>
+            <div v-if="lastPage > 1" class="flex flex-wrap justify-center gap-2">
+              <UiButton variant="outline" :disabled="state.page <= 1" @click="changePage(state.page - 1)">{{ t('catalogue.previousPage') }}</UiButton>
+              <UiButton variant="outline" :disabled="state.page >= lastPage" @click="changePage(state.page + 1)">{{ t('catalogue.nextPage') }}</UiButton>
+            </div>
           </div>
         </template>
       </section>
     </div>
 
-    <CatalogueSheet :id="filterId" ref="filterSheet" :title="t('catalogue.filters')">
+    <CatalogueSheet :id="filterId" ref="filterSheet" :title="t('catalogue.filters')" @closed="draftOpen = false">
       <CatalogueFilters v-model="draft" draft />
       <template #footer>
         <UiButton variant="outline" @click="draft = emptyCatalogueFilters()">{{ t('catalogue.reset') }}</UiButton>
-        <UiButton variant="primary" :disabled="Boolean(draftError)" @click="applyDraft">{{ t('catalogue.apply', draftCount) }}</UiButton>
+        <UiButton variant="primary" :disabled="Boolean(draftError)" @click="applyDraft">{{ draftCount === undefined ? t('catalogue.applyWithoutCount') : t('catalogue.apply', draftCount) }}</UiButton>
       </template>
     </CatalogueSheet>
     <CatalogueSheet :id="sortId" ref="sortSheet" :title="t('catalogue.sort')">

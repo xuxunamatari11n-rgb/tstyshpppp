@@ -1,6 +1,6 @@
-import type { storefrontCategories, storefrontSelections } from '~/mocks/storefront'
+import type { storefrontSelections } from '~/mocks/storefront'
 
-export type CategoryId = (typeof storefrontCategories)[number]['id']
+export type CategoryId = string
 export type CollectionId = (typeof storefrontSelections)[number]
 
 export interface CommercialImage {
@@ -8,6 +8,7 @@ export interface CommercialImage {
   width: number
   height: number
   altKey: string
+  alt?: string
   cutout?: boolean
 }
 
@@ -16,6 +17,11 @@ export interface CommercialProduct {
   slug: string
   nameKey: string
   descriptionKey: string
+  name?: string
+  description?: string
+  fullDescription?: string
+  seoTitle?: string
+  seoDescription?: string
   categoryId: CategoryId
   subcategoryId?: string
   images: readonly CommercialImage[]
@@ -26,7 +32,7 @@ export interface CommercialProduct {
   featured: boolean
   newArrival: boolean
   fullDescriptionKey?: string
-  specifications?: readonly { labelKey: string; valueKey: string }[]
+  specifications?: readonly { labelKey: string; valueKey: string; label?: string; value?: string }[]
   deliveryKey?: string
   stockQuantity?: number
   relatedProductIds?: readonly string[]

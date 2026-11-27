@@ -6,6 +6,7 @@ Nuxt 4 foundation for the Testy Shop storefront, customer account and administra
 
 ```sh
 pnpm install
+# Copy .env.example to .env and configure the Supabase URL and publishable key.
 pnpm dev
 ```
 
@@ -13,11 +14,11 @@ Open `/design-system` for the French guide or `/es/design-system` for Spanish. B
 
 The storefront homepage is available at `/` and `/es`. Browse products at `/boutique` and `/es/tienda`, categories at `/categorie/[slug]` and `/es/categoria/[slug]`, and search at `/recherche?q=…` and `/es/buscar?q=…`. The previous catalogue paths redirect with the same query parameters.
 
-Discovery uses the same mock products as the homepage. The URL stores filters, sorting and how many pages are visible. Favorites, cart and account are public placeholders for navigation. The legal previews remain development-only. Catalogue favorites live in memory and checkout is pending.
+The homepage, catalogue, search and product pages read from Supabase. The catalogue URL stores filters, sorting and how many pages are visible. The French and Spanish account routes support email/password authentication. Catalogue favorites live in memory and checkout is pending.
 
 Product cards and search suggestions link to localized product pages at `/produit/[slug]` and `/es/producto/[slug]`. Each product page can generate a draft WhatsApp order with its quantity, price, indicative total and URL when the shop number is configured. The cart button is disabled until a cart handler is connected.
 
-To enable the storefront’s WhatsApp contact links, set `NUXT_PUBLIC_WHATSAPP_NUMBER` to the shop’s international number. With no valid number configured, mobile shortcuts and the homepage ordering section point to the localized assistance section.
+Configure the shop’s international WhatsApp number in `store_settings`. With no valid number configured, mobile shortcuts and the homepage ordering section point to the localized assistance section.
 
 ```sh
 pnpm typecheck
@@ -33,7 +34,7 @@ pnpm build
 - `app/composables` provides field accessibility and client-side entrance motion. `app/utils/formatCurrency.ts` formats whole francs.
 - `i18n/locales` contains the French and Spanish messages. Add corresponding keys to each locale.
 
-Pinia and Nuxt Image are available to features that need shared state and media. Supabase services are planned for a later milestone.
+See [Supabase setup and migration](docs/supabase.md) for database, Auth, storage, demo catalogue and validation details.
 
 ## Homepage imagery
 

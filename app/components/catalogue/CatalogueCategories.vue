@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import { featuredCategories } from '~/mocks/home'
-import { catalogueCategories, type CatalogueState } from '~/utils/catalogue'
+import type { CatalogueState } from '~/utils/catalogue'
 import type { CategoryId } from '~/types/commerce'
 
 const props = defineProps<{ state: CatalogueState; link: (id?: CategoryId) => string }>()
 const { t } = useI18n()
-const thumbnails = new Map(featuredCategories.map(category => [category.id, category.image.src]))
+const { categories } = useShopMeta()
 const list = useTemplateRef('list')
 const before = ref(false)
 const after = ref(false)
@@ -41,19 +40,19 @@ function selected(id: CategoryId) {
           {{ t('catalogue.allProducts') }}
         </NuxtLink>
       </li>
-      <li v-for="category in catalogueCategories" :key="category.id">
+      <li v-for="category in categories" :key="category.id">
         <NuxtLink
           :to="link(category.id)"
           class="catalogue-category-link"
           :data-active="selected(category.id)"
           :aria-current="state.categories.length === 1 && selected(category.id) ? 'true' : undefined"
-          :aria-label="state.categories.length > 1 && selected(category.id) ? t('catalogue.selectedCategory', { category: t(`storefront.categories.${category.id}`) }) : undefined"
+          :aria-label="state.categories.length > 1 && selected(category.id) ? t('catalogue.selectedCategory', { category: category.name }) : undefined"
         >
           <span class="catalogue-thumb">
-            <img v-if="thumbnails.has(category.id)" :src="thumbnails.get(category.id)" alt="" width="34" height="34" loading="lazy">
+            <img v-if="category.image" :src="category.image.src" alt="" width="34" height="34" loading="lazy">
             <Icon v-else name="ion:grid-outline" size="17" aria-hidden="true" />
           </span>
-          {{ t(`storefront.categories.${category.id}`) }}
+          {{ category.name }}
         </NuxtLink>
       </li>
     </ul>

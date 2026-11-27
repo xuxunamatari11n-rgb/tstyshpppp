@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { storefrontCategories, storefrontFeaturedCategory, storefrontSelections } from '~/mocks/storefront'
+import { storefrontSelections } from '~/mocks/storefront'
 import promotionImage from '~/assets/design-system/tech-accessories.webp'
 
 const { t } = useI18n()
@@ -11,7 +11,9 @@ const panel = useTemplateRef('panel')
 const panelId = useId()
 const open = ref(false)
 const categoryIndex = ref(0)
-const category = computed(() => storefrontCategories[categoryIndex.value] ?? storefrontCategories[0])
+const { categories } = useShopMeta()
+const category = computed(() => categories.value[categoryIndex.value] ?? categories.value[0])
+const featured = computed(() => categories.value.find(item => item.id === 'electronics'))
 const route = useRoute()
 const routeBaseName = useRouteBaseName()
 const activeSelection = computed(() => routeBaseName(route) === 'catalogue' ? route.query.selection : undefined)
@@ -37,7 +39,8 @@ function toggle() {
 }
 
 function moveCategory(event: KeyboardEvent, index: number) {
-  const last = storefrontCategories.length - 1
+  const last = categories.value.length - 1
+  if (last < 0) return
   const next = { ArrowDown: (index + 1) % (last + 1), ArrowUp: (index + last) % (last + 1), Home: 0, End: last }
   if (!(event.key in next)) return
   event.preventDefault()
@@ -58,6 +61,7 @@ const motion = useStorefrontTransition()
           class="ui-button storefront-categories"
           data-variant="primary"
           :aria-expanded="open"
+          :disabled="!categories.length"
           :aria-controls="panelId"
           @click="toggle"
         >
@@ -79,11 +83,11 @@ const motion = useStorefrontTransition()
     </UiContainer>
 
     <Transition v-bind="motion" :css="false">
-      <div v-show="open" :id="panelId" ref="panel" :inert="!open" class="absolute inset-x-0 top-full mt-2">
+      <div v-if="category" v-show="open" :id="panelId" ref="panel" :inert="!open" class="absolute inset-x-0 top-full mt-2">
         <UiContainer>
           <section :aria-label="t('storefront.nav.allCategories')" class="storefront-panel mega-grid grid max-h-[min(74vh,38rem)] overflow-y-auto">
             <ul class="grid content-start gap-1 bg-subtle p-3">
-              <li v-for="(entry, index) in storefrontCategories" :key="entry.id">
+              <li v-for="(entry, index) in categories" :key="entry.id">
                 <button
                   type="button"
                   class="storefront-category-option"
@@ -92,14 +96,14 @@ const motion = useStorefrontTransition()
                   @click="categoryIndex = index"
                   @keydown="moveCategory($event, index)"
                 >
-                  {{ t(`storefront.categories.${entry.id}`) }}
+                  {{ entry.name }}
                   <Icon name="ion:chevron-forward-outline" size="16" aria-hidden="true" />
                 </button>
               </li>
             </ul>
 
             <div class="min-w-0 p-5">
-              <h2 class="mb-2 text-lg font-semibold">{{ t(`storefront.categories.${category.id}`) }}</h2>
+              <h2 class="mb-2 text-lg font-semibold">{{ category.name }}</h2>
               <NuxtLink
                 :to="catalogue({ categoryId: category.id })"
                 class="storefront-text-link inline-flex min-h-11 items-center gap-2 text-sm font-semibold"
@@ -109,19 +113,19 @@ const motion = useStorefrontTransition()
                 <Icon name="ion:arrow-forward-outline" size="17" aria-hidden="true" />
               </NuxtLink>
               <ul class="mt-2 border-t border-line pt-2">
-                <li v-for="id in category.subcategories" :key="id">
+                <li v-for="item in category.subcategories" :key="item.id">
                   <NuxtLink
-                    :to="catalogue({ categoryId: category.id, subcategory: id })"
+                    :to="catalogue({ categoryId: category.id, subcategory: item.id })"
                     class="storefront-suggestion"
                     @click="close()"
-                  >{{ t(`storefront.subcategories.${id}`) }}</NuxtLink>
+                  >{{ item.name }}</NuxtLink>
                 </li>
               </ul>
             </div>
 
-            <div class="p-3 ps-0">
+            <div v-if="featured" class="p-3 ps-0">
               <NuxtLink
-                :to="catalogue({ categoryId: storefrontFeaturedCategory.id })"
+                :to="catalogue({ categoryId: featured.id })"
                 class="block overflow-hidden rounded-standard bg-brand text-brand-foreground"
                 @click="close()"
               >

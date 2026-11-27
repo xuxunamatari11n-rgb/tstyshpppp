@@ -7,6 +7,7 @@ const { t } = useI18n()
 const localePath = useLocalePath()
 const destination = useStorefrontDestination()
 const whatsappUrl = useWhatsAppContact()
+const { settings } = useShopMeta()
 const trust = [
   { id: 'delivery', icon: 'ion:cube-outline' },
   { id: 'help', icon: 'ion:headset-outline' },
@@ -26,7 +27,7 @@ const trust = [
             </span>
             <div>
               <h2 class="text-sm font-semibold">{{ t(`storefront.trust.${item.id}.title`) }}</h2>
-              <p class="mt-0.5 text-sm text-muted-ink">{{ t(`storefront.trust.${item.id}.description`) }}</p>
+              <p class="mt-0.5 text-sm text-muted-ink">{{ item.id === 'help' && settings?.supportInformation ? settings.supportInformation : t(`storefront.trust.${item.id}.description`) }}</p>
             </div>
           </li>
         </ul>
@@ -73,7 +74,7 @@ const trust = [
           </div>
         </div>
         <div class="flex flex-wrap items-center justify-between gap-x-4 border-t border-white/20 py-2">
-          <p class="text-xs text-line">{{ t('storefront.footer.copyright') }}</p>
+          <p class="text-xs text-line">{{ settings?.storeName ? `© ${settings.storeName}` : t('storefront.footer.copyright') }}</p>
           <SharedLanguageSwitcher />
         </div>
       </UiContainer>

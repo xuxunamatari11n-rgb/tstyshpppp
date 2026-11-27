@@ -79,7 +79,38 @@
       "category": "Accessoires tech"
     }
   },
+  "auth": {
+    "account": "Mon compte",
+    "login": "Se connecter",
+    "signup": "Créer un compte",
+    "reset": "Réinitialiser le mot de passe",
+    "recover": "Choisir un nouveau mot de passe",
+    "logout": "Se déconnecter",
+    "email": "Adresse e-mail",
+    "password": "Mot de passe",
+    "firstName": "Prénom",
+    "lastName": "Nom",
+    "admin": "Administration",
+    "adminReady": "Accès administrateur vérifié.",
+    "invalidLink": "Ce lien a expiré ou est invalide.",
+    "confirmed": "Adresse e-mail confirmée.",
+    "notices": {
+      "signup": "Si l’adresse est admissible, vous recevrez un lien de confirmation.",
+      "reset": "Si un compte correspond à cette adresse, vous recevrez un lien de réinitialisation.",
+      "updated": "Mot de passe mis à jour."
+    },
+    "errors": {
+      "email": "Saisissez une adresse e-mail valide.",
+      "password": "Vérifiez le mot de passe. Un nouveau mot de passe doit comporter au moins huit caractères.",
+      "rate": "Trop de tentatives. Réessayez plus tard.",
+      "unconfirmed": "Confirmez votre adresse e-mail avant de vous connecter.",
+      "credentials": "Adresse e-mail ou mot de passe incorrect.",
+      "invalid": "La demande est invalide.",
+      "unavailable": "L’authentification est momentanément indisponible."
+    }
+  },
   "product": {
+    "shopClosed": "La boutique ne prend pas de commandes pour le moment.",
     "details": "Fiche produit",
     "back": "Retour aux produits",
     "favorite": "Favori",
@@ -126,6 +157,11 @@
     "notFoundHint": "Cette fiche n’est pas disponible. Retrouvez les autres produits dans la boutique."
   },
   "catalogue": {
+    "nextPage": "Page suivante",
+    "previousPage": "Page précédente",
+    "page": "Page {page} sur {total}",
+    "pageUnavailable": "Cette page de résultats n’est plus disponible.",
+    "applyWithoutCount": "Appliquer les filtres",
     "breadcrumb": "Fil d’Ariane",
     "shop": "Boutique",
     "allProducts": "Tous les produits",

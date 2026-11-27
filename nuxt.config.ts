@@ -3,7 +3,6 @@ import tailwindcss from '@tailwindcss/vite'
 const storefrontPublicPaths = {
   favorites: { fr: '/favoris', es: '/favoritos' },
   cart: { fr: '/panier', es: '/carrito' },
-  account: { fr: '/compte', es: '/cuenta' },
 }
 
 const storefrontPreviewPaths = {
@@ -22,7 +21,10 @@ export default defineNuxtConfig({
     },
   },
   runtimeConfig: {
-    public: { whatsappNumber: '' },
+    supabaseUrl: '',
+    supabasePublishableKey: '',
+    siteUrl: '',
+    public: { whatsappNumber: '', storefrontMock: false },
   },
   modules: [
     (_options, nuxt) => {

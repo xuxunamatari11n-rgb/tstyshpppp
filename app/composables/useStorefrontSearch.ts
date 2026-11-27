@@ -1,31 +1,30 @@
 import type { Ref } from 'vue'
-import { suggestedSearches, storefrontCategories } from '~/mocks/storefront'
+import { suggestedSearches } from '~/mocks/storefront'
 import { matchesCatalogueText, normalizeSearch, searchTerms } from '~/utils/catalogue'
 
 const recentSearchesKey = 'storefront-recent-searches'
 
 export function useStorefrontSearchResults(query: Ref<string>) {
   const { t } = useI18n()
-  const { data } = useCatalogueData()
-  const productText = useCatalogueProductText()
+  const { categories } = useShopMeta()
+  const { name } = useProductContent()
+  const term = ref(query.value)
+  watch(query, (value, _previous, onCleanup) => {
+    const timer = setTimeout(() => { term.value = value }, 180)
+    onCleanup(() => clearTimeout(timer))
+  })
+  const { data } = useCatalogueData(computed(() => ({ q: term.value.trim(), limit: term.value.trim() ? 5 : 3 })))
 
   return computed(() => {
     const terms = searchTerms(query.value)
     const hasQuery = Boolean(query.value.trim())
-    const categories = storefrontCategories.map(category => ({
-      ...category,
-      label: t(`storefront.categories.${category.id}`),
-      keywords: category.subcategories.map(id => t(`storefront.subcategories.${id}`)).join(' '),
-    }))
-    const products = data.value?.products ?? []
-    const matchingProducts = hasQuery
-      ? products.filter(product => terms.length && matchesCatalogueText(productText(product), terms)) : products
-
+    const matches = categories.value.filter(category => !hasQuery || (terms.length
+      && matchesCatalogueText([category.name, category.description, ...category.subcategories.map(item => item.name)].join(' '), terms)))
     return {
-      categories: hasQuery
-        ? categories.filter(category => terms.length && matchesCatalogueText(`${category.label} ${category.keywords}`, terms)).slice(0, 5)
-        : categories.slice(0, 4),
-      products: matchingProducts.slice(0, hasQuery ? 5 : 3).map(product => ({ id: product.id, slug: product.slug, label: t(product.nameKey) })),
+      categories: matches.slice(0, hasQuery ? 5 : 4).map(category => ({ ...category, label: category.name })),
+      products: term.value === query.value ? (data.value?.products ?? []).map(product => ({
+        id: product.id, slug: product.slug, label: name(product),
+      })) : [],
       suggested: suggestedSearches.map(id => t(`storefront.popular.${id}`)),
     }
   })

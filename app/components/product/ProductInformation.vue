@@ -3,7 +3,7 @@ import type { CommercialProduct } from '~/types/commerce'
 const props = defineProps<{ product: CommercialProduct }>()
 const { t } = useI18n()
 const sections = computed(() => [
-  ...(props.product.fullDescriptionKey ? [{ id: 'description', icon: 'ion:document-text-outline', text: t(props.product.fullDescriptionKey) }] : []),
+  ...(props.product.fullDescription || props.product.fullDescriptionKey ? [{ id: 'description', icon: 'ion:document-text-outline', text: props.product.fullDescription ?? t(props.product.fullDescriptionKey ?? '') }] : []),
   ...(props.product.specifications?.length ? [{ id: 'specifications', icon: 'ion:list-outline', text: '' }] : []),
   ...(props.product.deliveryKey ? [{ id: 'delivery', icon: 'ion:cube-outline', text: t(props.product.deliveryKey) }] : []),
   { id: 'support', icon: 'ion:headset-outline', text: '' },
@@ -20,8 +20,8 @@ const sections = computed(() => [
       </summary>
       <div class="product-information-content">
         <dl v-if="section.id === 'specifications'">
-          <div v-for="item in product.specifications" :key="item.labelKey">
-            <dt>{{ t(item.labelKey) }}</dt><dd>{{ t(item.valueKey) }}</dd>
+          <div v-for="item in product.specifications" :key="item.label || item.labelKey">
+            <dt>{{ item.label ?? t(item.labelKey) }}</dt><dd>{{ item.value ?? t(item.valueKey) }}</dd>
           </div>
         </dl>
         <a v-else-if="section.id === 'support'" class="product-help-link" href="#storefront-assistance">{{ t('product.assistance') }}</a>

@@ -10,6 +10,7 @@ const mobileHeader = useTemplateRef('mobileHeader')
 const drawerId = useId()
 const compact = useStorefrontMobileHeader(mobileHeader)
 const whatsappUrl = useWhatsAppContact()
+const { settings } = useShopMeta()
 const route = useRoute()
 const assistance = computed(() => ({ path: route.path, query: route.query, hash: '#storefront-assistance' }))
 
@@ -25,7 +26,7 @@ function openSearch(event: MouseEvent) {
 <template>
   <div class="storefront-announcement hidden bg-ink text-surface lg:block">
     <UiContainer class="flex min-h-8 items-center justify-between gap-4 text-xs">
-      <p>{{ t('storefront.announcement') }}</p>
+      <p>{{ settings?.announcement || t('storefront.announcement') }}</p>
       <div class="flex shrink-0 items-center gap-5">
         <a href="#storefront-assistance" class="storefront-text-link inline-flex min-h-8 items-center gap-1.5">
           <Icon name="ion:headset-outline" size="15" aria-hidden="true" /> {{ t('storefront.nav.assistance') }}

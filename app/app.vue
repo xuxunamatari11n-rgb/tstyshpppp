@@ -5,6 +5,7 @@ useHead(() => ({
   htmlAttrs: { lang: localeProperties.value.language ?? locale.value },
   titleTemplate: title => title ? `${title} · Testy Shop` : 'Testy Shop',
 }))
+await provideShopMeta()
 </script>
 
 <template>

@@ -79,7 +79,38 @@
       "category": "Accesorios tecnológicos"
     }
   },
+  "auth": {
+    "account": "Mi cuenta",
+    "login": "Iniciar sesión",
+    "signup": "Crear una cuenta",
+    "reset": "Restablecer la contraseña",
+    "recover": "Elegir una contraseña nueva",
+    "logout": "Cerrar sesión",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "firstName": "Nombre",
+    "lastName": "Apellidos",
+    "admin": "Administración",
+    "adminReady": "Acceso administrativo verificado.",
+    "invalidLink": "Este enlace ha caducado o no es válido.",
+    "confirmed": "Correo electrónico confirmado.",
+    "notices": {
+      "signup": "Si la dirección cumple los requisitos, recibirás un enlace de confirmación.",
+      "reset": "Si existe una cuenta con esa dirección, recibirás un enlace para restablecer la contraseña.",
+      "updated": "Contraseña actualizada."
+    },
+    "errors": {
+      "email": "Introduce una dirección de correo válida.",
+      "password": "Comprueba la contraseña. Una contraseña nueva debe tener al menos ocho caracteres.",
+      "rate": "Demasiados intentos. Vuelve a intentarlo más tarde.",
+      "unconfirmed": "Confirma tu correo electrónico antes de iniciar sesión.",
+      "credentials": "Correo electrónico o contraseña incorrectos.",
+      "invalid": "La solicitud no es válida.",
+      "unavailable": "La autenticación no está disponible en este momento."
+    }
+  },
   "product": {
+    "shopClosed": "La tienda no acepta pedidos en este momento.",
     "details": "Ficha del producto",
     "back": "Volver a los productos",
     "favorite": "Favorito",
@@ -126,6 +157,11 @@
     "notFoundHint": "Esta ficha no está disponible. Encuentra otros productos en la tienda."
   },
   "catalogue": {
+    "nextPage": "Página siguiente",
+    "previousPage": "Página anterior",
+    "page": "Página {page} de {total}",
+    "pageUnavailable": "Esta página de resultados ya no está disponible.",
+    "applyWithoutCount": "Aplicar los filtros",
     "breadcrumb": "Ruta de navegación",
     "shop": "Tienda",
     "allProducts": "Todos los productos",

@@ -1,5 +1,6 @@
 import type { LocationQuery, LocationQueryRaw, RouteLocationRaw } from 'vue-router'
-import { storefrontCategories, storefrontSelections } from '~/mocks/storefront'
+import { storefrontSelections } from '~/mocks/storefront'
+import type { ShopCategory } from '~/types/shop'
 import type { CategoryId, CollectionId, CommercialProduct } from '~/types/commerce'
 import { productAvailability } from '~/utils/product'
 
@@ -24,13 +25,12 @@ export interface CatalogueState extends CatalogueFilters {
   page: number
 }
 
-export const catalogueCategories = storefrontCategories
 export const emptyCatalogueFilters = (): CatalogueFilters => ({
   categories: [], subcategory: '', min: '', max: '', stock: false, promo: false, new: false,
 })
 
-export function findCatalogueCategory(value: unknown) {
-  return catalogueCategories.find(category => category.id === value || category.slug === value)
+export function findCatalogueCategory(value: unknown, categories: ShopCategory[]) {
+  return categories.find(category => category.id === value || category.slug === value)
 }
 
 function price(value: string) {
@@ -49,34 +49,34 @@ export function cataloguePriceRange(filters: Pick<CatalogueFilters, 'min' | 'max
   return { min, max, error } as const
 }
 
-export function normalizeCatalogueFilters(filters: CatalogueFilters): CatalogueFilters {
+export function normalizeCatalogueFilters(filters: CatalogueFilters, knownCategories: ShopCategory[]): CatalogueFilters {
   const categories = [...new Set(filters.categories)]
-  const category = categories.length === 1 ? findCatalogueCategory(categories[0]) : undefined
+  const category = categories.length === 1 ? findCatalogueCategory(categories[0], knownCategories) : undefined
   const { min, max, error } = cataloguePriceRange(filters)
   return {
     ...filters,
     categories,
-    subcategory: category?.subcategories.some(id => id === filters.subcategory) ? filters.subcategory : '',
+    subcategory: category?.subcategories.some(item => item.id === filters.subcategory) ? filters.subcategory : '',
     min: error === 'inverted' || min === undefined || Number.isNaN(min) ? '' : String(min),
     max: error === 'inverted' || max === undefined || Number.isNaN(max) ? '' : String(max),
   }
 }
 
-export function readCatalogueState(query: LocationQuery, categorySlug?: unknown): CatalogueState {
+export function readCatalogueState(query: LocationQuery, knownCategories: ShopCategory[], categorySlug?: unknown): CatalogueState {
   const text = (key: string) => typeof query[key] === 'string' ? query[key] : ''
   const values = Array.isArray(query.category) ? query.category : [query.category]
-  const category = findCatalogueCategory(categorySlug)
+  const category = findCatalogueCategory(categorySlug, knownCategories)
   const categories = category ? [category.id] : values.flatMap(value => {
-    const match = findCatalogueCategory(value)
+    const match = findCatalogueCategory(value, knownCategories)
     return match ? [match.id] : []
   })
   const pageText = text('page')
-  const page = /^[1-9][0-9]{0,8}$/.test(pageText) ? Number(pageText) : 1
+  const page = /^[1-9][0-9]{0,8}$/.test(pageText) ? Math.min(10_000, Number(pageText)) : 1
   return {
     ...normalizeCatalogueFilters({
       categories, subcategory: text('subcategory'), min: text('min'), max: text('max'),
       stock: text('stock') === '1', promo: text('promo') === '1', new: text('new') === '1',
-    }),
+    }, knownCategories),
     selection: storefrontSelections.find(id => id === text('selection')),
     sort: catalogueSorts.find(id => id === text('sort')) ?? 'default',
     q: text('q').trim().slice(0, 100),
@@ -84,9 +84,9 @@ export function readCatalogueState(query: LocationQuery, categorySlug?: unknown)
   }
 }
 
-export function catalogueLocation(view: CatalogueView, state: CatalogueState): RouteLocationRaw {
+export function catalogueLocation(view: CatalogueView, state: CatalogueState, knownCategories: ShopCategory[]): RouteLocationRaw {
   const category = view === 'category' && state.categories.length === 1
-    ? findCatalogueCategory(state.categories[0]) : undefined
+    ? findCatalogueCategory(state.categories[0], knownCategories) : undefined
   const categories = state.categories
   const query: LocationQueryRaw = {
     category: category || !categories.length ? undefined : categories.length === 1 ? categories[0] : categories,

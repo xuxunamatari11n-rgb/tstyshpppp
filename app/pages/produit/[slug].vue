@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { CartLineRequest } from '~/types/commerce'
-import { findProductBySlug, productAvailability, productImages, productQuantityLimit, productSavings, relatedProducts } from '~/utils/product'
+import { findProductBySlug, productAvailability, productImages, productQuantityLimit, productSavings } from '~/utils/product'
 
 definePageMeta({
   name: 'product',
@@ -15,17 +15,27 @@ const { t, locale, locales } = useI18n()
 const requestUrl = useRequestURL()
 const whatsappContact = useWhatsAppContact()
 const catalogue = useHomeCatalogueLink()
+const { categoryName, settings } = useShopMeta()
+const { name, description: describe, photoAlt } = useProductContent()
 const { isFavorite, toggleFavorite } = useProductFavorites()
-const { data, status, error, refresh } = await useCatalogueData()
+const { data, status, error, refresh } = await useCatalogueData(computed(() => ({
+  slug: typeof route.params.slug === 'string' ? route.params.slug : '~', limit: 1,
+})))
 const products = computed(() => data.value?.products ?? [])
 const product = computed(() => findProductBySlug(products.value, route.params.slug))
 const loading = computed(() => status.value === 'pending' || status.value === 'idle')
-const category = computed(() => product.value ? t(`storefront.categories.${product.value.categoryId}`) : '')
-const title = computed(() => product.value ? t(product.value.nameKey) : t(error.value ? 'product.loadError' : 'product.notFound'))
-const description = computed(() => product.value?.descriptionKey ? t(product.value.descriptionKey) : '')
+const category = computed(() => product.value ? categoryName(product.value.categoryId) : '')
+const title = computed(() => product.value ? name(product.value) : t(error.value ? 'product.loadError' : 'product.notFound'))
+const description = computed(() => product.value ? describe(product.value) : '')
 const photos = computed(() => product.value ? productImages(product.value) : [])
-const suggestions = computed(() => product.value ? relatedProducts(products.value, product.value) : [])
+const { data: suggested } = useCatalogueData(computed(() => product.value
+  ? { categories: [product.value.categoryId], exclude: product.value.slug, limit: 4 }
+  : { slug: '~', limit: 0 }))
+const suggestions = computed(() => suggested.value?.products ?? [])
 const available = computed(() => Boolean(product.value && productAvailability(product.value)))
+const shopClosed = computed(() => settings.value?.open === false)
+const purchasable = computed(() => available.value && !shopClosed.value)
+const formatPrice = useShopPrice()
 const savings = computed(() => product.value ? productSavings(product.value) : 0)
 const discount = computed(() => savings.value && product.value?.previousPrice
   ? Math.round(savings.value / product.value.previousPrice * 100) : 0)
@@ -42,11 +52,11 @@ function productUrl(language = locale.value) {
   return new URL(path, requestUrl).href
 }
 const whatsappOrder = computed(() => {
-  if (!whatsappContact.value || !product.value || !available.value) return
+  if (!whatsappContact.value || !product.value || !purchasable.value) return
   const link = new URL(whatsappContact.value)
   link.searchParams.set('text', t('product.whatsappMessage', {
-    product: title.value, quantity: quantity.value, unit: formatCurrency(product.value.price),
-    total: formatCurrency(total.value), url: productUrl(),
+    product: title.value, quantity: quantity.value, unit: formatPrice(product.value.price),
+    total: formatPrice(total.value), url: productUrl(),
   }))
   return link.href
 })
@@ -57,12 +67,13 @@ if (import.meta.server) {
 }
 
 useSeoMeta({
-  title, description,
-  ogTitle: title,
-  ogDescription: description,
+  title: () => product.value?.seoTitle ?? title.value,
+  description: () => product.value?.seoDescription ?? description.value,
+  ogTitle: () => product.value?.seoTitle ?? title.value,
+  ogDescription: () => product.value?.seoDescription ?? description.value,
   ogUrl: () => productUrl() || undefined,
   ogImage: () => photos.value[0] ? new URL(photos.value[0].src, requestUrl).href : undefined,
-  ogImageAlt: () => photos.value[0] ? t(photos.value[0].altKey) : undefined,
+  ogImageAlt: () => photos.value[0] ? photoAlt(photos.value[0]) : undefined,
   robots: () => product.value ? undefined : 'noindex, follow',
 })
 useHead(() => ({
@@ -120,9 +131,9 @@ function toggle() {
         <UiContainer class="product-mobile-bar-inner">
           <div class="product-mobile-total">
             <span>{{ t('product.total') }}</span>
-            <output aria-live="polite"><UiNumericText :value="formatCurrency(total)" /></output>
+            <output aria-live="polite"><UiNumericText :value="formatPrice(total)" /></output>
           </div>
-          <ProductPurchaseActions :line="line" :available="available" :whatsapp-url="whatsappOrder" compact />
+          <ProductPurchaseActions :line="line" :available="purchasable" :closed="shopClosed" :whatsapp-url="whatsappOrder" compact />
         </UiContainer>
       </aside>
     </template>
@@ -146,14 +157,14 @@ function toggle() {
           <h1>{{ title }}</h1>
 
           <div class="product-pricing">
-            <UiNumericText class="product-unit-price" :value="formatCurrency(product.price)" />
+            <UiNumericText class="product-unit-price" :value="formatPrice(product.price)" />
             <del v-if="savings && product.previousPrice" class="product-previous-price">
               <span class="sr-only">{{ t('guide.specimens.previousPrice') }}</span>
-              <UiNumericText :value="formatCurrency(product.previousPrice)" />
+              <UiNumericText :value="formatPrice(product.previousPrice)" />
             </del>
             <UiBadge v-if="discount" variant="discount">{{ t('home.discount', { percent: discount }) }}</UiBadge>
           </div>
-          <p v-if="savings" class="product-savings">{{ t('product.savings', { amount: formatCurrency(savings) }) }}</p>
+          <p v-if="savings" class="product-savings">{{ t('product.savings', { amount: formatPrice(savings) }) }}</p>
 
           <div class="product-availability" :data-available="available">
             <Icon :name="available ? 'ion:checkmark-circle-outline' : 'ion:alert-circle-outline'" size="19" aria-hidden="true" />
@@ -163,18 +174,18 @@ function toggle() {
 
           <div class="product-summary-order">
             <div class="product-quantity-line">
-              <ProductQuantity v-model="quantity" :max="max" :disabled="!available" />
+              <ProductQuantity v-model="quantity" :max="max" :disabled="!purchasable" />
               <div class="product-inline-total">
                 <span>{{ t('product.total') }}</span>
-                <UiNumericText :value="formatCurrency(total)" />
+                <UiNumericText :value="formatPrice(total)" />
               </div>
             </div>
 
             <div class="hidden lg:block">
-              <ProductPurchaseActions :line="line" :available="available" :whatsapp-url="whatsappOrder" />
+              <ProductPurchaseActions :line="line" :available="purchasable" :closed="shopClosed" :whatsapp-url="whatsappOrder" />
             </div>
             <p v-if="available" class="product-purchase-note">
-              {{ t(whatsappOrder ? 'product.whatsappHint' : 'storefront.footer.whatsappPending') }}
+              {{ t(shopClosed ? 'product.shopClosed' : whatsappOrder ? 'product.whatsappHint' : 'storefront.footer.whatsappPending') }}
             </p>
 
             <div class="product-secondary-actions hidden lg:flex">
